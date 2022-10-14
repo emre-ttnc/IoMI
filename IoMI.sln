@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoMI.Server", "IoMI\Server\IoMI.Server.csproj", "{94471FA6-35FE-46B3-B8B7-7F5A1E8381E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoMI.Client", "IoMI\Client\IoMI.Client.csproj", "{548B29CB-64B4-4274-8BC6-AE9D7D427C17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoMI.Shared", "IoMI\Shared\IoMI.Shared.csproj", "{17A43D08-8E6A-4A24-AC0A-D2D607C7BEE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoMI.Application", "IoMI\Application\IoMI.Application.csproj", "{C8F439EA-24A4-4DBE-B655-B45BB0A4E238}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoMI.Domain", "IoMI\Domain\IoMI.Domain.csproj", "{3AEEE136-B67F-4B46-9DE9-C3C05F90F75E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoMI.Infrastructure", "IoMI\Infrastructure\IoMI.Infrastructure.csproj", "{687941E9-839E-41E9-9286-38DB1F458183}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IoMI.Persistence", "IoMI\Persistence\IoMI.Persistence.csproj", "{C9BD690F-032E-4EB4-A66D-BBCE15519977}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94471FA6-35FE-46B3-B8B7-7F5A1E8381E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94471FA6-35FE-46B3-B8B7-7F5A1E8381E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94471FA6-35FE-46B3-B8B7-7F5A1E8381E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94471FA6-35FE-46B3-B8B7-7F5A1E8381E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{548B29CB-64B4-4274-8BC6-AE9D7D427C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{548B29CB-64B4-4274-8BC6-AE9D7D427C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{548B29CB-64B4-4274-8BC6-AE9D7D427C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{548B29CB-64B4-4274-8BC6-AE9D7D427C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17A43D08-8E6A-4A24-AC0A-D2D607C7BEE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17A43D08-8E6A-4A24-AC0A-D2D607C7BEE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17A43D08-8E6A-4A24-AC0A-D2D607C7BEE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17A43D08-8E6A-4A24-AC0A-D2D607C7BEE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8F439EA-24A4-4DBE-B655-B45BB0A4E238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8F439EA-24A4-4DBE-B655-B45BB0A4E238}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8F439EA-24A4-4DBE-B655-B45BB0A4E238}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8F439EA-24A4-4DBE-B655-B45BB0A4E238}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AEEE136-B67F-4B46-9DE9-C3C05F90F75E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AEEE136-B67F-4B46-9DE9-C3C05F90F75E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AEEE136-B67F-4B46-9DE9-C3C05F90F75E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AEEE136-B67F-4B46-9DE9-C3C05F90F75E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{687941E9-839E-41E9-9286-38DB1F458183}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{687941E9-839E-41E9-9286-38DB1F458183}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{687941E9-839E-41E9-9286-38DB1F458183}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{687941E9-839E-41E9-9286-38DB1F458183}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9BD690F-032E-4EB4-A66D-BBCE15519977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9BD690F-032E-4EB4-A66D-BBCE15519977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9BD690F-032E-4EB4-A66D-BBCE15519977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9BD690F-032E-4EB4-A66D-BBCE15519977}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5BAF67A-960E-4598-809D-8E33CEE1F9B7}
+	EndGlobalSection
+EndGlobal
