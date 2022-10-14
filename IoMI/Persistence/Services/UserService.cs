@@ -3,6 +3,8 @@ using IoMI.Domain.Entities.UserEntities;
 using IoMI.Shared.Models.ServerResponseModels;
 using IoMI.Shared.Models.UserModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace IoMI.Persistence.Services;
 
@@ -48,7 +50,11 @@ public class UserService : IUserService
         AppUser registeredUser = await _userManager.FindByEmailAsync(email);
         string token = await _userManager.GenerateEmailConfirmationTokenAsync(registeredUser);
         if (!string.IsNullOrEmpty(token))
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(token);
+            token = WebEncoders.Base64UrlEncode(bytes);
             await _emailService.SendEmailConfirmationTokenAsync(email, registeredUser.Id.ToString(), token);
+        }
     }
 
     public async Task<ServerResponse<bool>> ConfirmEmailAsync(Guid userId, string token)
@@ -56,7 +62,10 @@ public class UserService : IUserService
         AppUser user = await _userManager.FindByIdAsync(userId.ToString());
         if (user == null)
             return new ServerResponse<bool>() { Success = false, ErrorMessage = "This user not registered. Please check your link.", Value = false };
-        
+
+        byte[] bytes = WebEncoders.Base64UrlDecode(token);
+        token = Encoding.UTF8.GetString(bytes);
+
         IdentityResult result = await _userManager.ConfirmEmailAsync(user, token);
         if (!result.Succeeded || result.Errors.Any())
             return new ServerResponse<bool> { Success = false, ErrorMessage = result.Errors.FirstOrDefault()?.Code ?? "This token is invalid.", Value = false };

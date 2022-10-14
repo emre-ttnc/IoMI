@@ -7,21 +7,23 @@
     {
         @if (IsSuccess)
         {
-            <div class="alert alert-success" role="alert">
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <ion-icon class="me-2 fs-1" name="checkmark-sharp"></ion-icon>
                 Your e-mail confirmed.
             </div>
         }
         else
         {
-            <div class="alert alert-error" role="alert">
-                Wrong or invalid request. Please check your e-mail.
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <ion-icon class="me-2 fs-1" name="close-circle-outline"></ion-icon>
+                Wrong or invalid request.
             </div>
         }
     }
     else
     {
-        <div class="alert alert-warning" role="alert">
-            <span></span>
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <div class="spinner-border me-2"></div>
             Please wait... We are working on it...
         </div>
     }
@@ -38,14 +40,12 @@
         if (UserId == Guid.Empty || string.IsNullOrEmpty(Token)){
             IsResponsed = true;
             IsSuccess = false;
-            StateHasChanged();
             return;
         }
         ConfirmEmailModel confirmEmailModel = new() { UserId = UserId, Token = Token };
         ServerResponse<bool> result = await Http.PostAndGetServerResponseAsync<bool, ConfirmEmailModel>("user/confirmemail", confirmEmailModel);
         IsSuccess = result.Success;
         IsResponsed = true;
-        StateHasChanged();
     }
 }
 
