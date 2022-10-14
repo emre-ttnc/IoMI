@@ -1,0 +1,18 @@
+﻿@code {
+    [Parameter]
+    public string Caption { get; set; } = string.Empty;
+    [Parameter]
+    public string Color { get; set; } = string.Empty;
+    [Parameter]
+    public bool IsOutline { get; set; } = false;
+    [Parameter]
+    public string Icon { get; set; } = string.Empty;
+    [Parameter]
+    public bool IsSmall { get; set; } = false;
+    [Parameter]
+    public bool IsBusy { get; set; } = false;
+    [Parameter]
+    public string IsBusyCaption { get; set; } = "Working on it.";
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClick { get; set; }
+}

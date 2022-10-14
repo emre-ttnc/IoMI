@@ -1,0 +1,20 @@
+﻿@inherits BaseButtonComponent
+
+<button class="d-flex justify-content-center align-items-center px-4 btn @(IsSmall ? "btn-sm " : "" ) @(string.IsNullOrEmpty(Color.Trim()) ? "": $"btn-{ (IsOutline ? "outline-" : "")}{Color}")"
+        type="submit"
+        onclick=@OnClick
+        disabled="@IsBusy">
+
+    @* When app is busy or not --> change button. *@
+    @if (IsBusy)
+    {
+        <span class="spinner-border spinner-border-sm me-1"></span>
+        @IsBusyCaption
+    }
+    else
+    {
+        <ion-icon class="fs-4 me-2" name="@(string.IsNullOrEmpty(Icon.Trim()) ? "" : Icon)"></ion-icon>
+        @Caption
+    }
+
+</button>

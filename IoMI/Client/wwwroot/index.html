@@ -14,14 +14,21 @@
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
 </head>
 
-<body>
-    <div id="app">Loading...</div>
+<body class="vh-100">
+    <div id="app" class="h-100">
+        <div class="vh-100 vw-100 d-flex flex-column align-items-center justify-content-center bg-dark text-light gap-2">
+            <div class="spinner-border"></div>
+            <div class="fs-1">Please wait...</div>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
     <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>

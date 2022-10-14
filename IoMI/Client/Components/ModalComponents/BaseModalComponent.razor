@@ -1,0 +1,15 @@
+﻿@code {
+    [Parameter] public string Message { get; set; } = string.Empty;
+    [Parameter] public string ConfirmText { get; set; } = string.Empty;
+    [Parameter] public string CancelText { get; set; } = "🗙";
+
+    [CascadingParameter] BlazoredModalInstance ModalInstance { get; set; } = default!;
+    protected async Task Confirmed()
+    {
+        await ModalInstance.CloseAsync(ModalResult.Ok(true));
+    }
+    protected async Task Canceled()
+    {
+        await ModalInstance.CancelAsync();
+    }
+}

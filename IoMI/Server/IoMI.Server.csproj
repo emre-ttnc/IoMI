@@ -4,14 +4,21 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>ada86711-81c0-4869-a057-56d141b8af45</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Client\IoMI.Client.csproj" />
+    <ProjectReference Include="..\Infrastructure\IoMI.Infrastructure.csproj" />
+    <ProjectReference Include="..\Persistence\IoMI.Persistence.csproj" />
     <ProjectReference Include="..\Shared\IoMI.Shared.csproj" />
   </ItemGroup>
 

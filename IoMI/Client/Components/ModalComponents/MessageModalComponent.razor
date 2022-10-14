@@ -1,0 +1,31 @@
+﻿@inherits BaseModalComponent
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-backdrop fade show" @onclick="Canceled"></div>
+    <div class="modal-dialog" style="z-index: 1050">
+        <div class="modal-content">
+            <div class="modal-header p-2 bg-light">
+                <h5 class="modal-title d-flex align-items-center"> <ion-icon class="fs-2 text-info me-2" name="information-circle-outline"></ion-icon> Information </h5>
+                <button type="button" class="btn-close" aria-label="Close" @onclick="Canceled">
+                </button>
+            </div>
+            <div class="modal-body d-flex justify-content-center align-items-center">
+                <p class="text-center m-0">@Message</p>
+            </div>
+            <div class="modal-footer p-1">
+                <div class="d-flex justify-content-end">
+                    <ButtonComponent Caption="@CancelText" Color="primary" Icon="checkmark-done-outline" OnClick="@Canceled" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public async override Task SetParametersAsync(ParameterView parameters)
+    {
+        Message = parameters.GetValueOrDefault<string>("Message") ?? "Message not found!";
+        CancelText = "O. K.";
+        await base.SetParametersAsync(parameters);
+    }
+}

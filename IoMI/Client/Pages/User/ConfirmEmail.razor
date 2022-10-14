@@ -1,0 +1,51 @@
+﻿@page "/user/confirmemail/{UserId:guid}/{Token}"
+@layout PublicLayout
+@inject HttpClient Http
+
+<div class="row justify-content-center m-0 p-2">
+    @if (IsResponsed)
+    {
+        @if (IsSuccess)
+        {
+            <div class="alert alert-success" role="alert">
+                Your e-mail confirmed.
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-error" role="alert">
+                Wrong or invalid request. Please check your e-mail.
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            <span></span>
+            Please wait... We are working on it...
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public Guid UserId { get; set; }
+    [Parameter] public string? Token { get; set; }
+    [Parameter] public bool IsSuccess { get; set; } = false;
+    [Parameter] public bool IsResponsed { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (UserId == Guid.Empty || string.IsNullOrEmpty(Token)){
+            IsResponsed = true;
+            IsSuccess = false;
+            StateHasChanged();
+            return;
+        }
+        ConfirmEmailModel confirmEmailModel = new() { UserId = UserId, Token = Token };
+        ServerResponse<bool> result = await Http.PostAndGetServerResponseAsync<bool, ConfirmEmailModel>("user/confirmemail", confirmEmailModel);
+        IsSuccess = result.Success;
+        IsResponsed = true;
+        StateHasChanged();
+    }
+}
+

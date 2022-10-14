@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\IoMI.Domain.csproj" />
+    <ProjectReference Include="..\Shared\IoMI.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
