@@ -40,21 +40,27 @@ public class UserService : IUserService
         }, user.Password);
         if (!result.Succeeded || result.Errors.Any())
             return new ServerResponse<bool>() { ErrorMessage = result.Errors.FirstOrDefault()?.Code ?? "Unknown error.", Success = false };
+
         if (!string.IsNullOrEmpty(user.Email))
-            await SendEmailConfirmationTokenAsync(user.Email);
-        return new ServerResponse<bool>() { Success = true };
+            return await SendEmailConfirmationTokenAsync(user.Email);
+
+        return new ServerResponse<bool>() { ErrorMessage = "Something went wrong! Unknown error.", Success = false, Value = false };
     }
 
-    public async Task SendEmailConfirmationTokenAsync(string email)
+    public async Task<ServerResponse<bool>> SendEmailConfirmationTokenAsync(string email)
     {
         AppUser registeredUser = await _userManager.FindByEmailAsync(email);
+        if (registeredUser is null || await _userManager.IsEmailConfirmedAsync(registeredUser))
+            return new ServerResponse<bool>() { ErrorMessage = "This email not registered or already confirmed!", Success = false, Value = false };
+
         string token = await _userManager.GenerateEmailConfirmationTokenAsync(registeredUser);
-        if (!string.IsNullOrEmpty(token))
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(token);
-            token = WebEncoders.Base64UrlEncode(bytes);
-            await _emailService.SendEmailConfirmationTokenAsync(email, registeredUser.Id.ToString(), token);
-        }
+        if (string.IsNullOrEmpty(token))
+            return new ServerResponse<bool>() { ErrorMessage = "Something went wrong! Unknown error.", Success = false, Value = false };
+
+        byte[] bytes = Encoding.UTF8.GetBytes(token);
+        token = WebEncoders.Base64UrlEncode(bytes);
+        await _emailService.SendEmailConfirmationTokenAsync(email, registeredUser.Id.ToString(), token);
+        return new ServerResponse<bool>() { Success = true, Value = true };
     }
 
     public async Task<ServerResponse<bool>> ConfirmEmailAsync(Guid userId, string token)

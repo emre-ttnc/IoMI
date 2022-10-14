@@ -33,4 +33,13 @@ public class UserController : ControllerBase
 
         return await _userService.ConfirmEmailAsync(request.UserId, request.Token);
     }
+
+    [HttpPost("sendconfirmemail")]
+    public async Task<ServerResponse<bool>> SendConfirmEmail([FromBody] SendConfirmEmailModel request)
+    {
+        if (request is null || string.IsNullOrEmpty(request.Email))
+            return new ServerResponse<bool>() { ErrorMessage = "Bad request!", Success = false, Value = false };
+
+        return await _userService.SendEmailConfirmationTokenAsync(request.Email);
+    }
 }

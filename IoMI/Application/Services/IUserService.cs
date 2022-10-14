@@ -7,6 +7,7 @@ public interface IUserService
 {
     Task<ServerResponse<bool>> CreateUserAsync(UserModel user);
     Task<ServerResponse<bool>> ConfirmEmailAsync(Guid userId, string token);
+    Task<ServerResponse<bool>> SendEmailConfirmationTokenAsync(string email);
     Task<bool> UpdateUserAsync(UserModel user);
     bool DeleteUser(UserModel user);
     Task<bool> DeleteUserAsync(Guid id);
