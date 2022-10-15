@@ -52,13 +52,13 @@
 
 
 @code {
-    private UserModel User = new() { Id = Guid.NewGuid() };
+    private UserRegisterModel User = new() { Id = Guid.NewGuid() };
     private bool BtnIsBusy = false;
 
     private async Task UserValidated()
     {
         BtnIsBusy = true;
-        ServerResponse<bool> response = await Http.PostAndGetServerResponseAsync<bool, UserModel>("/user/register", User);
+        ServerResponse<bool> response = await Http.PostAndGetServerResponseAsync<bool, UserRegisterModel>("/user/register", User);
         await Modal.ShowMessageModalAsync("Task completed.", response.Success ? $"We sent an email to {User.Email}." : response.ErrorMessage ?? "Unknown error.");
         User = new() { Id = Guid.NewGuid() };
         BtnIsBusy = false;

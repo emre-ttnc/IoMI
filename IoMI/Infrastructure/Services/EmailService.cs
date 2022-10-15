@@ -55,8 +55,19 @@ public class EmailService : IEmailService
         await SendEmailAsync(to, "IoMI - Email Confirmation", mailBody.ToString());
     }
 
-    public Task SendResetPasswordTokenAsync(string to, string userId, string token)
+    public async Task SendResetPasswordTokenAsync(string to, string userId, string token)
     {
-        throw new NotImplementedException();
+        StringBuilder mailBody = new();
+
+        mailBody.Append("<div style=\"display: flex; flex-direction: column; box-sizing; border-box; padding: 32px; font-family: Trebuchet MS, Verdana; font-size: 18px;\">");
+        mailBody.Append("<div style=\"display: flex; flex-direction: column; background-color: darkslategray; padding: 16px; border-radius: 8px; box-shadow: 0px 0px 8px gray; color: white; text-align: center;\">");
+        mailBody.Append("<h3 style=\"margin: 8px 0;\">Hello,</h3><p>We have received a request to reset password of your account.</p><p></p>");
+        mailBody.Append("<p>No changes have been made to your account yet.</p><p>You can reset your password by clicking the link below:</p><a target=\"blank\" href=\"");
+        mailBody.Append(_configuration["ClientUrl"]);
+        mailBody.Append($"user/confirmnewpassword/{userId}/{token}\"");
+        mailBody.Append("style=\"width: 50%; align-self: center; text-align: center; padding: 8px 4px; border: 1px solid white; border-radius: 4px; text-decoration: none; cursor: pointer; background: rgba(255,255,255,.2); color: white;\"> Reset Password </a>");
+        mailBody.Append("<p></p><p> If you did not request a new password, you can safely ignore this email.</p><p></p><p><em>-IoMI Developer Team</em></p></div></div>");
+
+        await SendEmailAsync(to, "IoMI - Reset Password Request", mailBody.ToString());
     }
 }

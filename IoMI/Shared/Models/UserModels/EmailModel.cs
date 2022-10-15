@@ -2,7 +2,7 @@
 
 namespace IoMI.Shared.Models.UserModels;
 
-public class SendConfirmEmailModel
+public class EmailModel
 {
     [Required]
     [EmailAddress(ErrorMessage = "Invalid format. Please check the email address.")]

@@ -5,16 +5,16 @@ namespace IoMI.Application.Services;
 
 public interface IUserService
 {
-    Task<ServerResponse<bool>> CreateUserAsync(UserModel user);
+    Task<ServerResponse<bool>> CreateUserAsync(UserRegisterModel user);
     Task<ServerResponse<bool>> ConfirmEmailAsync(Guid userId, string token);
     Task<ServerResponse<bool>> SendEmailConfirmationTokenAsync(string email);
-    Task<bool> UpdateUserAsync(UserModel user);
-    bool DeleteUser(UserModel user);
+    Task<ServerResponse<bool>> SendResetPasswordTokenAsync(string email);
+    Task<ServerResponse<bool>> VerifyResetTokenAsync(Guid userId, string token);
+    Task<ServerResponse<bool>> ResetPasswordAsync(Guid userId, string token, string newPassword, string newPasswordConfirm);
+    Task<bool> UpdateUserAsync(UserRegisterModel user);
+    bool DeleteUser(UserRegisterModel user);
     Task<bool> DeleteUserAsync(Guid id);
     Task<bool> UpdatePasswordAsync(Guid id, string password, string resetToken);
 
-    Task<bool> CreateInspectorAsync(UserModel inspector);
-    Task<bool> UpdateInspectorAsync(UserModel inspector);
-    Task<bool> DeleteInspectorAsync(UserModel inspector);
-    bool DeleteInspector(Guid id);
+    ServerResponse<bool> FailedResponse(string error = "Bad request.");
 }

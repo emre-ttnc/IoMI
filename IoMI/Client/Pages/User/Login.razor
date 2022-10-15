@@ -23,11 +23,16 @@
                 </div>
             </EditForm>
         </div>
+        <div class="card-footer p-2 d-flex justify-content-center">
+            <NavLink class="top-nav-link d-flex align-items-center btn btn-secondary" href="/user/resetpassword">
+                <ion-icon class="fs-4 me-2" name="repeat-outline"></ion-icon> Reset Password
+            </NavLink>
+        </div>
     </div>
 </div>
 
 @code {
-    private LoginUserModel User = new();
+    private UserLoginModel User = new();
     private bool IsBusy = false;
 
     private void UserValidated()

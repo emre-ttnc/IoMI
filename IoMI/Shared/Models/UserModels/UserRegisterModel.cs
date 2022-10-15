@@ -2,7 +2,7 @@
 
 namespace IoMI.Shared.Models.UserModels;
 
-public class UserModel
+public class UserRegisterModel
 {
     public Guid? Id { get; set; }
 
