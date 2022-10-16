@@ -1,17 +1,34 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<AuthorizeView Roles="Inspector, SystemAdmin">
+    <Authorized>
+        <div class="page">
+            <div class="sidebar">
+                <NavMenu />
+            </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <main>
+                <div class="top-row px-4">
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="dropdownUserMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <ion-icon class="fs-4 me-2" name="person-outline"></ion-icon>
+                            @context.User.Claims.FirstOrDefault(role => role.Type == System.Security.Claims.ClaimTypes.UserData)?.Value
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownUserMenu">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Log out</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
         </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <UnauthorizedComponent />
+    </NotAuthorized>
+</AuthorizeView>

@@ -1,16 +1,10 @@
 ﻿@page "/counter"
+@layout MainLayout
 @using System.Security.Claims
-@attribute [Authorize]
 
 <PageTitle>Counter</PageTitle>
 
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
-<AuthorizeView Roles="SystemAdmin, Inspector">
+<AuthorizeView Roles="Inspector" >
     <Authorized>
         <p class="text-light fs-2">
         @context.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.UserData)?.Value
@@ -18,13 +12,10 @@
         @context.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)?.Value
         </p>
     </Authorized>
+    <NotAuthorized>
+        <UnauthorizedComponent />
+    </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    private int currentCount = 0;
-
-    private void IncrementCount()
-    {
-        currentCount++;
-    }
 }
