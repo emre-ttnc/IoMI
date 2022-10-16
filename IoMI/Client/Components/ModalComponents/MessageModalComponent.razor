@@ -5,7 +5,7 @@
     <div class="modal-dialog" style="z-index: 1050">
         <div class="modal-content">
             <div class="modal-header p-2 bg-light">
-                <h5 class="modal-title d-flex align-items-center"> <ion-icon class="fs-2 text-info me-2" name="information-circle-outline"></ion-icon> Information </h5>
+                <h5 class="modal-title d-flex align-items-center"> <ion-icon class="fs-2 text-info me-2" name="information-circle-outline"></ion-icon> @Title </h5>
                 <button type="button" class="btn-close" aria-label="Close" @onclick="Canceled">
                 </button>
             </div>
@@ -24,7 +24,8 @@
 @code {
     public async override Task SetParametersAsync(ParameterView parameters)
     {
-        Message = parameters.GetValueOrDefault<string>("Message") ?? "Message not found!";
+        Message = parameters.GetValueOrDefault<string>("Message");
+        Title = parameters.GetValueOrDefault<string>("Title");
         CancelText = "O. K.";
         await base.SetParametersAsync(parameters);
     }

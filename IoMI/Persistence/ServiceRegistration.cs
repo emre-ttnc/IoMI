@@ -20,6 +20,7 @@ public static class ServiceRegistration
         services.AddIdentity<AppUser, UserRole>().AddEntityFrameworkStores<IoMIDbContext>().AddDefaultTokenProviders();
 
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         services.AddScoped<IScaleReadRepository, ScaleReadRepository>();
         services.AddScoped<IScaleWriteRepository, ScaleWriteRepository>();

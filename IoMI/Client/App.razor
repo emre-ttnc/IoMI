@@ -1,17 +1,23 @@
-﻿<CascadingBlazoredModal>
-    <Router AppAssembly="@typeof(App).Assembly">
-        <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(PublicLayout)" />
-            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        </Found>
-        <NotFound>
-            <PageTitle>404 - Not found</PageTitle>
-            <LayoutView Layout="@typeof(PublicLayout)">
-                <div class="d-flex flex-column align-items-center" role="alert">
-                    <img src="/notfound.svg" alt="Not found" width="600" />
-                    <p class="fs-1" style="color: #e67700">Sorry, there's nothing at this address.</p>
-                </div>
-            </LayoutView>
-        </NotFound>
-    </Router>
-</CascadingBlazoredModal>
+﻿<CascadingAuthenticationState>
+    <CascadingBlazoredModal>
+        <Router AppAssembly="@typeof(App).Assembly">
+            <Found Context="routeData">
+                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(PublicLayout)">
+                    <NotAuthorized>
+                        <h2> Access Denied! There is nothing for you. </h2>
+                    </NotAuthorized>
+                </AuthorizeRouteView>
+                <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+            </Found>
+            <NotFound>
+                <PageTitle>404 - Not found</PageTitle>
+                <LayoutView Layout="@typeof(PublicLayout)">
+                    <div class="d-flex flex-column align-items-center" role="alert">
+                        <img src="/notfound.svg" alt="Not found" width="600" />
+                        <p class="fs-1" style="color: #e67700">Sorry, there's nothing at this address.</p>
+                    </div>
+                </LayoutView>
+            </NotFound>
+        </Router>
+    </CascadingBlazoredModal>
+</CascadingAuthenticationState>

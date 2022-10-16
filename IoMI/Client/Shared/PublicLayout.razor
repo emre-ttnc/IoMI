@@ -3,13 +3,31 @@
 <div class="container-fluid px-0 h-100 d-flex flex-column public-page">
     <div class="bg-dark d-flex justify-content-center">
         <div class="container d-flex flex-row justify-content-end p-2">
-            <NavLink class="top-nav-link d-flex align-items-center btn btn-success" href="/user/register" Match="NavLinkMatch.All">
-                <ion-icon class="fs-4 me-2" name="person-add-outline"></ion-icon> Register
-            </NavLink>
-            <hr class="mx-2" />
-            <NavLink class="top-nav-link d-flex align-items-center btn btn-primary" href="/user/login" Match="NavLinkMatch.All">
-                <ion-icon class="fs-4 me-2" name="person-circle-outline"></ion-icon> Sign in
-            </NavLink>
+            <AuthorizeView>
+                <Authorized>
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle d-flex align-items-center" type="button" id="dropdownUserMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                            <ion-icon class="fs-4 me-2" name="person-outline"></ion-icon>
+                            @context.User.Claims.FirstOrDefault(role => role.Type == System.Security.Claims.ClaimTypes.UserData)?.Value
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownUserMenu">
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Log out</a></li>
+                        </ul>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="top-nav-link d-flex align-items-center btn btn-success" href="/user/register" Match="NavLinkMatch.All">
+                        <ion-icon class="fs-4 me-2" name="person-add-outline"></ion-icon> Register
+                    </NavLink>
+                    <hr class="mx-2" />
+                    <NavLink class="top-nav-link d-flex align-items-center btn btn-primary" href="/user/login" Match="NavLinkMatch.All">
+                        <ion-icon class="fs-4 me-2" name="person-circle-outline"></ion-icon> Sign in
+                    </NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
     </div>
 

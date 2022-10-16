@@ -16,7 +16,7 @@ public class ModalManager
     public async Task ShowMessageModalAsync(string title, string message)
     {
         ModalOptions options = new() { UseCustomLayout = true, AnimationType = ModalAnimationType.None };
-        ModalParameters parameters = new() { { "Message", message } };
+        ModalParameters parameters = new() { { "Message", message }, { "Title", title } };
         await _modalService.Show<MessageModalComponent>(title, parameters, options).Result;
     }
 

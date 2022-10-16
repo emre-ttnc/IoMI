@@ -24,7 +24,8 @@
 @code {
     public async override Task SetParametersAsync(ParameterView parameters)
     {
-        Message = parameters.GetValueOrDefault<string>("Message") ?? "Message not found!";
+        Message = parameters.GetValueOrDefault<string>("Message");
+        Title = parameters.GetValueOrDefault<string>("Title");
         ConfirmText = "Confirm";
         CancelText = "Cancel";
         await base.SetParametersAsync(parameters);
