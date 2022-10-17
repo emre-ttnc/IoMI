@@ -8,49 +8,59 @@ namespace IoMI.Client.Utils
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         private readonly IJSRuntime _js;
-        private readonly NavigationManager _navigationManager;
 
-        public CustomAuthStateProvider(IJSRuntime js, NavigationManager navigationManager)
+        public CustomAuthStateProvider(IJSRuntime js)
         {
             _js = js;
-            _navigationManager = navigationManager;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            string token = await _js.InvokeAsync<string>("localStorage.getItem", "accessToken") ?? string.Empty;
+            string token = await GetTokenAsync();
             if (!string.IsNullOrEmpty(token.Trim()))
             {
                 AuthenticationState state;
                 ClaimsIdentity claims = new();
                 JwtSecurityTokenHandler handler = new();
+                JwtSecurityToken securityToken = new();
                 try
                 {
-                    JwtSecurityToken securityToken = handler.ReadJwtToken(token);
-                    if (securityToken.ValidTo > DateTime.UtcNow)
-                        claims = new(securityToken.Claims, "jwt");
-                    else
-                    {
-                        await _js.InvokeVoidAsync("localStorage.removeItem", "accessToken");
-                        _navigationManager.NavigateTo("/user/login");
-                    }
+                    securityToken = handler.ReadJwtToken(token);
                 }
                 catch (Exception)
                 {
-                    await _js.InvokeVoidAsync("localStorage.removeItem", "accessToken");
-                    _navigationManager.NavigateTo("/user/login");
+                    await SetTokenAsync(string.Empty);
+                }
+                if (securityToken.ValidTo > DateTime.UtcNow)
+                {
+                    claims = new(securityToken.Claims, "jwt");
+                    if (!claims.IsAuthenticated)
+                        await SetTokenAsync(string.Empty);
+                }
+                else
+                {
+                    await SetTokenAsync(string.Empty);
                 }
                 ClaimsPrincipal user = new(claims);
                 state = new(user);
                 NotifyAuthenticationStateChanged(Task.FromResult(state));
                 return state;
             }
-            else
-            {
-                _navigationManager.NavigateTo("/user/login");
-            }
             return new(new());
         }
+
+        public async Task SetTokenAsync(string token)
+        {
+            if(string.IsNullOrEmpty(token.Trim()))
+                await _js.InvokeVoidAsync("localStorage.removeItem", "accessToken");
+            else
+                await _js.InvokeVoidAsync("localStorage.setItem", "accessToken", token);
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+        }
+
+        public async Task<string> GetTokenAsync() => await _js.InvokeAsync<string>("localStorage.getItem", "accessToken") ?? string.Empty;
+
+
 
         //public static IEnumerable<Claim> GetClaimsFromJwt(string jwtToken)
         //{

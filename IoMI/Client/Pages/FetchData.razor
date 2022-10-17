@@ -1,7 +1,7 @@
 ﻿@page "/fetchdata"
-@layout MainLayout
 @using IoMI.Shared
 @inject HttpClient Http
+@attribute [Authorize(Roles = "Inspector")]
 
 <PageTitle>Weather forecast</PageTitle>
 

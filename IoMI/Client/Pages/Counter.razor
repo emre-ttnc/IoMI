@@ -1,21 +1,9 @@
 ﻿@page "/counter"
 @layout MainLayout
 @using System.Security.Claims
+@attribute [Authorize(Roles = "SystemAdmin")]
 
-<PageTitle>Counter</PageTitle>
-
-<AuthorizeView Roles="Inspector" >
-    <Authorized>
-        <p class="text-light fs-2">
-        @context.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.UserData)?.Value
-         as 
-        @context.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role)?.Value
-        </p>
-    </Authorized>
-    <NotAuthorized>
-        <UnauthorizedComponent />
-    </NotAuthorized>
-</AuthorizeView>
+<PageTitle>IOMI - Counter</PageTitle>
 
 @code {
 }

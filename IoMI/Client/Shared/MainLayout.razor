@@ -1,6 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@inject CustomAuthStateProvider AppStateProvider
 
-<AuthorizeView Roles="Inspector, SystemAdmin">
+<AuthorizeView>
     <Authorized>
         <div class="page">
             <div class="sidebar">
@@ -18,7 +19,7 @@
                             <li><a class="dropdown-item" href="#">Profile</a></li>
                             <li><a class="dropdown-item" href="#">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Log out</a></li>
+                            <li class="d-flex justify-content-center"><ButtonComponent Caption="Log out" Color="danger" Icon="log-out-outline" OnClick="@(() => AppStateProvider.SetTokenAsync(string.Empty))"></ButtonComponent> </li>
                         </ul>
                     </div>
                 </div>
@@ -29,6 +30,6 @@
         </div>
     </Authorized>
     <NotAuthorized>
-        <UnauthorizedComponent />
+        <Login />
     </NotAuthorized>
 </AuthorizeView>

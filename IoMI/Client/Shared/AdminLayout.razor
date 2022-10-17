@@ -1,0 +1,13 @@
+﻿@inherits LayoutComponentBase
+@attribute [Authorize(Roles = "SystemAdmin")]
+
+<AuthorizeView Roles="SystemAdmin">
+    <Authorized>
+        @Body
+    </Authorized>
+    <NotAuthorized>
+        <div class="vw-100 vh-100 overflow-hidden d-flex justify-content-center align-items-center alert alert-danger m-0">
+            <h3> Access Denied!</h3>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

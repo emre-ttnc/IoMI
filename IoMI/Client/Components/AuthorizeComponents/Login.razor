@@ -1,9 +1,7 @@
-﻿@page "/user/login"
-@layout PublicLayout
-@inject HttpClient Http
+﻿@inject HttpClient Http
 @inject ModalManager Modal
 @inject NavigationManager NavManager
-@inject IJSRuntime JS
+@inject CustomAuthStateProvider AppStateProvider
 
 <div class="row justify-content-center m-0 p-2">
     <div class="col-md-8 col-lg-6 col-xl-5 col-xxl-4 card p-0 mt-5">
@@ -44,12 +42,9 @@
         IsBusy = true;
         ServerResponse<string> response = await Http.PostAndGetServerResponseAsync<string, UserLoginModel>("auth/login", User);
         if (response.Success && !string.IsNullOrEmpty(response?.Value?.Trim()))
-        {
-            await JS.InvokeVoidAsync("localStorage.setItem", "accessToken", response.Value);
-            NavManager.NavigateTo("/", forceLoad: true);
-        } else {
+            await AppStateProvider.SetTokenAsync(response.Value);
+        else
             await Modal.ShowMessageModalAsync("Access Denied!", response?.ErrorMessage ?? "Unknown error.");
-        }
         User = new();
         IsBusy = false;
     }
