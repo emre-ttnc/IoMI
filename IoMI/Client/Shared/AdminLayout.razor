@@ -1,13 +1,39 @@
-﻿@inherits LayoutComponentBase
+﻿@using System.Security.Claims
+@inherits LayoutComponentBase
 @attribute [Authorize(Roles = "SystemAdmin")]
 
-<AuthorizeView Roles="SystemAdmin">
-    <Authorized>
-        @Body
-    </Authorized>
-    <NotAuthorized>
-        <div class="vw-100 vh-100 overflow-hidden d-flex justify-content-center align-items-center alert alert-danger m-0">
-            <h3> Access Denied!</h3>
-        </div>
-    </NotAuthorized>
-</AuthorizeView>
+@inject CustomAuthStateProvider AppStateProvider
+
+<PageTitle> IoMI - Admin Panel </PageTitle>
+
+<div class="h-100 d-flex flex-column">
+    <AuthorizeView Roles="SystemAdmin">
+        <Authorized>
+            <div class="row m-0 flex-fill">
+                <div class="col col-md-5 col-lg-4 col-xl-3 col-xxl-2 shadow text-dark">
+                    <div class="d-flex justify-content-center py-3">
+                        <NavLink class="navbar-brand text-center m-0" href="/adminpanel">IoMI - Admin Panel </NavLink>
+                    </div>
+                    <p class="my-3">
+                        Welcome, @context.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.UserData)?.Value
+                    </p>
+                    <AdminNavbar />
+                    <NavLink class="d-flex align-items-center dropdown-item py-2" href="/adminpanel/settings" Match="NavLinkMatch.All">
+                        <ion-icon class="me-2 fs-4" name="cog-outline"></ion-icon>
+                        Settings
+                    </NavLink>
+                    <a class="dropdown-item d-flex align-items-center py-2" style="cursor:pointer" @onclick="@(() => AppStateProvider.SetTokenAsync(string.Empty))">
+                        <ion-icon class="me-2 fs-4" name="log-out-outline"></ion-icon>
+                        Log out
+                    </a>
+                </div>
+                <div class="col">
+                    @Body
+                </div>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <Login />
+        </NotAuthorized>
+    </AuthorizeView>
+</div>

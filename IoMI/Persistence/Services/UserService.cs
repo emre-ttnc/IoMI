@@ -3,6 +3,7 @@ using IoMI.Application.Services;
 using IoMI.Domain.Entities.UserEntities;
 using IoMI.Shared.Models.ServerResponseModels;
 using IoMI.Shared.Models.UserModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
@@ -13,11 +14,13 @@ public class UserService : IUserService
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailService _emailService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserService(UserManager<AppUser> userManager, IEmailService emailService)
+    public UserService(UserManager<AppUser> userManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor)
     {
         _userManager = userManager;
         _emailService = emailService;
+        _httpContextAccessor = httpContextAccessor;
     }
 
 
@@ -126,6 +129,22 @@ public class UserService : IUserService
         return new() { Success = result.Succeeded, Value = result.Succeeded };
     }
 
+    public async Task<ServerResponse<bool>> UpdatePasswordAsync(string password, string newPassword)
+    {
+        string username = _httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "";
+        if (string.IsNullOrEmpty(username.Trim()))
+            return FailedResponse("Unauthorized request. Denied!");
+
+        AppUser user = await _userManager.FindByNameAsync(username);
+        if (user is null)
+            return FailedResponse("User not found.");
+
+        IdentityResult result = await _userManager.ChangePasswordAsync(user, password, newPassword);
+        if (!result.Succeeded || result.Errors.Any())
+            return FailedResponse(result.Errors?.FirstOrDefault()?.Description ?? "Unknown error.");
+
+        return new() { Success = result.Succeeded, Value = result.Succeeded };
+    }
 
 
 
@@ -140,10 +159,6 @@ public class UserService : IUserService
         throw new NotImplementedException();
     }
 
-    public Task<bool> UpdatePasswordAsync(Guid id, string password, string resetToken)
-    {
-        throw new NotImplementedException();
-    }
 
     public Task<bool> UpdateUserAsync(UserRegisterModel user)
     {

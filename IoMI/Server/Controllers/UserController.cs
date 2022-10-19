@@ -1,6 +1,8 @@
 ﻿using IoMI.Application.Services;
 using IoMI.Shared.Models.ServerResponseModels;
 using IoMI.Shared.Models.UserModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IoMI.Server.Controllers;
@@ -65,5 +67,14 @@ public class UserController : ControllerBase
         if (request is null || string.IsNullOrEmpty(request.Password) || !request.Password.Equals(request.ConfirmPassword) || request.UserId == Guid.Empty || string.IsNullOrEmpty(request?.Token?.Trim()))
             return _userService.FailedResponse("Bad request or password does not match!");
         return await _userService.ResetPasswordAsync(request.UserId, request.Token, request.Password, request.ConfirmPassword);
+    }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("changepassword")]
+    public async Task<ServerResponse<bool>> ChangePassword([FromBody] ChangePasswordModel request)
+    {
+        if (request is null || string.IsNullOrEmpty(request.OldPassword?.Trim()) || string.IsNullOrEmpty(request.Password?.Trim()) || !request.Password.Equals(request.ConfirmPassword))
+            return _userService.FailedResponse("Bad request or password does not match!");
+        return await _userService.UpdatePasswordAsync( password: request.OldPassword, newPassword: request.Password);
     }
 }

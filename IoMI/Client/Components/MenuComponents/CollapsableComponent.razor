@@ -1,5 +1,5 @@
-﻿<div class="collapsable card m-1 bg-dark">
-    <div class="p-2 d-flex justify-content-between align-items-center card-header collapse-header" @onclick=@Toggle>
+﻿<div class="collapsable card m-2">
+    <div class="p-2 d-flex justify-content-between align-items-center card-header collapse-header" style="cursor: pointer;" @onclick=@Toggle>
         @Title
         <ion-icon name="chevron-down-outline" style="@(Collapsed ? "" : "transform: rotate(-180deg);") transition: transform .3s linear;"></ion-icon>
     </div>
@@ -10,7 +10,7 @@
 
 @code {
     [Parameter] public RenderFragment ChildContent { get; set; } = default!;
-    [Parameter] public bool Collapsed { get; set; }
+    [Parameter] public bool Collapsed { get; set; } = true;
     [Parameter] public string Title { get; set; } = string.Empty;
 
     private void Toggle()

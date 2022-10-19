@@ -8,10 +8,12 @@ namespace IoMI.Client.Utils
     public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         private readonly IJSRuntime _js;
+        private readonly HttpClient _httpClient;
 
-        public CustomAuthStateProvider(IJSRuntime js)
+        public CustomAuthStateProvider(IJSRuntime js, HttpClient httpClient)
         {
             _js = js;
+            _httpClient = httpClient;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -36,6 +38,7 @@ namespace IoMI.Client.Utils
                     claims = new(securityToken.Claims, "jwt");
                     if (!claims.IsAuthenticated)
                         await SetTokenAsync(string.Empty);
+                    _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", token);
                 }
                 else
                 {

@@ -14,7 +14,7 @@ public interface IUserService
     Task<bool> UpdateUserAsync(UserRegisterModel user);
     bool DeleteUser(UserRegisterModel user);
     Task<bool> DeleteUserAsync(Guid id);
-    Task<bool> UpdatePasswordAsync(Guid id, string password, string resetToken);
+    Task<ServerResponse<bool>> UpdatePasswordAsync(string password, string newPassword);
 
     ServerResponse<bool> FailedResponse(string error = "Bad request.");
 }

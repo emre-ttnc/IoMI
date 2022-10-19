@@ -1,0 +1,26 @@
+﻿<nav class="flex-column text-dark">
+    <CollapsableComponent Title="Users">
+        <NavLink class="dropdown-item d-flex align-items-center p-2" href="/adminpanel/users" Match="NavLinkMatch.All">
+            <ion-icon class="me-2 fs-4" name="person-outline"></ion-icon> Users of Instrument
+        </NavLink>
+        <NavLink class="dropdown-item d-flex align-items-center p-2" href="/adminpanel/inspectors" Match="NavLinkMatch.All">
+            <ion-icon class="me-2 fs-4" name="person-outline"></ion-icon> Inspectors
+        </NavLink>
+    </CollapsableComponent>
+    <CollapsableComponent Title="Inspections">
+        <NavLink class="dropdown-item d-flex align-items-center p-2" href="/adminpanel/inspections/gasmeters" Match="NavLinkMatch.All">
+            <ion-icon class="me-2 fs-4" name="search-outline"></ion-icon> Gas Meter Inspections
+        </NavLink>
+        <NavLink class="dropdown-item d-flex align-items-center p-2" href="/adminpanel/inspections/scales" Match="NavLinkMatch.All">
+            <ion-icon class="me-2 fs-4" name="search-outline"></ion-icon> Scale Inspections
+        </NavLink>
+    </CollapsableComponent>
+    <CollapsableComponent Title="Reports">
+        <NavLink class="dropdown-item d-flex align-items-center p-2" href="/adminpanel/reports/gasmeters" Match="NavLinkMatch.All">
+            <ion-icon class="me-2 fs-4" name="document-outline"></ion-icon> Gas Meter Reports
+        </NavLink>
+        <NavLink class="dropdown-item d-flex align-items-center p-2" href="/adminpanel/reports/scales" Match="NavLinkMatch.All">
+            <ion-icon class="me-2 fs-4" name="document-outline"></ion-icon> Scale Reports
+        </NavLink>
+    </CollapsableComponent>
+</nav>
