@@ -42,7 +42,10 @@
         IsBusy = true;
         ServerResponse<string> response = await Http.PostAndGetServerResponseAsync<string, UserLoginModel>("auth/login", User);
         if (response.Success && !string.IsNullOrEmpty(response?.Value?.Trim()))
+        {
             await AppStateProvider.SetTokenAsync(response.Value);
+            NavManager.NavigateTo("/roles");
+        }
         else
             await Modal.ShowMessageModalAsync("Access Denied!", response?.ErrorMessage ?? "Unknown error.");
         User = new();

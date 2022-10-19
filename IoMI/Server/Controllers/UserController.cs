@@ -77,4 +77,16 @@ public class UserController : ControllerBase
             return _userService.FailedResponse("Bad request or password does not match!");
         return await _userService.UpdatePasswordAsync( password: request.OldPassword, newPassword: request.Password);
     }
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SystemAdmin")]
+    [HttpGet("GetUsers")]
+    public async Task<UserList[]> GetUsers() => await _userService.GetAllUserOfInstrument();
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SystemAdmin")]
+    [HttpGet("GetInspectors")]
+    public async Task<UserList[]> GetInspectors() => await _userService.GetAllInspectors();
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SystemAdmin")]
+    [HttpPost("ChangeStatus")]
+    public async Task<ServerResponse<bool>> ChangeStatus([FromBody] string id) => await _userService.ChangeStatus(id);
 }

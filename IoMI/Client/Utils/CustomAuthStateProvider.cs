@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.JSInterop;
+﻿using Microsoft.JSInterop;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -21,7 +20,6 @@ namespace IoMI.Client.Utils
             string token = await GetTokenAsync();
             if (!string.IsNullOrEmpty(token.Trim()))
             {
-                AuthenticationState state;
                 ClaimsIdentity claims = new();
                 JwtSecurityTokenHandler handler = new();
                 JwtSecurityToken securityToken = new();
@@ -45,9 +43,7 @@ namespace IoMI.Client.Utils
                     await SetTokenAsync(string.Empty);
                 }
                 ClaimsPrincipal user = new(claims);
-                state = new(user);
-                NotifyAuthenticationStateChanged(Task.FromResult(state));
-                return state;
+                return new(user);
             }
             return new(new());
         }

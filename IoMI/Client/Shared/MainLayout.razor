@@ -17,6 +17,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                             <li><a class="dropdown-item" href="/user/profile">Profile</a></li>
+                            <li><a class="dropdown-item" href="/roles">Choose a Role</a></li>
                             <li><a class="dropdown-item" href="/user/settings">Settings</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li class="d-flex justify-content-center"><ButtonComponent Caption="Log out" Color="danger" Icon="log-out-outline" OnClick="@(() => AppStateProvider.SetTokenAsync(string.Empty))"></ButtonComponent> </li>

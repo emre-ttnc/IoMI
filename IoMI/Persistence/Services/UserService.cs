@@ -5,8 +5,6 @@ using IoMI.Shared.Models.ServerResponseModels;
 using IoMI.Shared.Models.UserModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 
 namespace IoMI.Persistence.Services;
 
@@ -82,6 +80,8 @@ public class UserService : IUserService
         if (!stampResult.Succeeded || stampResult.Errors.Any())
             return new ServerResponse<bool>() { Success = false, ErrorMessage = stampResult.Errors.FirstOrDefault()?.Code ?? "Something went wrong.", Value = false };
 
+        user.IsActive = true;
+        await _userManager.UpdateAsync(user);
         return new() { Success = true, Value = true };
     }
 
@@ -145,7 +145,52 @@ public class UserService : IUserService
 
         return new() { Success = result.Succeeded, Value = result.Succeeded };
     }
+    
+    private async Task<UserList[]> GetAllUsers()
+    {
+        UserList[] users = _userManager.Users.Select(user => new UserList()
+            {
+                Id = user.Id,
+                Username = user.ToString(),
+                Name = user.Name ?? "",
+                Surname = user.Surname ?? "",
+                Email = user.Email,
+                IsActive = user.IsActive,
+                Address = user.Address ?? "",
+                RegistryCode = user.RegistryCode,
+                CompanyName = user.CompanyName ?? ""
+            }).ToArray();
+        foreach (UserList user in users)
+            user.Role = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id));
 
+        return users;
+    }
+
+    public async Task<UserList[]> GetAllUserOfInstrument()
+    {
+        UserList[] users = await GetAllUsers();
+        return users.Where(user => user.Role?.FirstOrDefault() == "User").ToArray();
+    }
+
+    public async Task<UserList[]> GetAllInspectors()
+    {
+        UserList[] users = await GetAllUsers();
+        return users.Where(user => user.Role?.FirstOrDefault() == "Inspector").ToArray();
+    }
+
+    public async Task<ServerResponse<bool>> ChangeStatus(string id)
+    {
+        AppUser user = await _userManager.FindByIdAsync(id);
+        if (user is null)
+            return FailedResponse("User not found.");
+
+        user.IsActive = !user.IsActive;
+        IdentityResult result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded || result.Errors.Any())
+            return FailedResponse(result.Errors?.FirstOrDefault()?.Description ?? "Unknown error.");
+
+        return new() { Success = result.Succeeded, Value = result.Succeeded };
+    }
 
 
 

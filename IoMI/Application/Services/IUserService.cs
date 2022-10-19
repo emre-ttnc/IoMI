@@ -11,10 +11,14 @@ public interface IUserService
     Task<ServerResponse<bool>> SendResetPasswordTokenAsync(string email);
     Task<ServerResponse<bool>> VerifyResetTokenAsync(Guid userId, string token);
     Task<ServerResponse<bool>> ResetPasswordAsync(Guid userId, string token, string newPassword, string newPasswordConfirm);
+    Task<ServerResponse<bool>> UpdatePasswordAsync(string password, string newPassword);
+    Task<UserList[]> GetAllUserOfInstrument();
+    Task<UserList[]> GetAllInspectors();
+    Task<ServerResponse<bool>> ChangeStatus(string id);
+
     Task<bool> UpdateUserAsync(UserRegisterModel user);
     bool DeleteUser(UserRegisterModel user);
     Task<bool> DeleteUserAsync(Guid id);
-    Task<ServerResponse<bool>> UpdatePasswordAsync(string password, string newPassword);
 
     ServerResponse<bool> FailedResponse(string error = "Bad request.");
 }
