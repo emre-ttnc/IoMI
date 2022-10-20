@@ -75,18 +75,31 @@ public class UserController : ControllerBase
     {
         if (request is null || string.IsNullOrEmpty(request.OldPassword?.Trim()) || string.IsNullOrEmpty(request.Password?.Trim()) || !request.Password.Equals(request.ConfirmPassword))
             return _userService.FailedResponse("Bad request or password does not match!");
-        return await _userService.UpdatePasswordAsync( password: request.OldPassword, newPassword: request.Password);
+        return await _userService.UpdatePasswordAsync(password: request.OldPassword, newPassword: request.Password);
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SystemAdmin")]
     [HttpGet("GetUsers")]
-    public async Task<UserList[]> GetUsers() => await _userService.GetAllUserOfInstrument();
+    public async Task<UserModel[]> GetUsers() => await _userService.GetAllUserOfInstrument();
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SystemAdmin")]
     [HttpGet("GetInspectors")]
-    public async Task<UserList[]> GetInspectors() => await _userService.GetAllInspectors();
+    public async Task<UserModel[]> GetInspectors() => await _userService.GetAllInspectors();
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SystemAdmin")]
     [HttpPost("ChangeStatus")]
     public async Task<ServerResponse<bool>> ChangeStatus([FromBody] string id) => await _userService.ChangeStatus(id);
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpGet("GetUserInfo")]
+    public async Task<ServerResponse<UpdateUserProfileModel>> GetUserInfo() => await _userService.GetUserInfo();
+
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [HttpPost("UpdateProfile")]
+    public async Task<ServerResponse<bool>> UpdateProfile([FromBody] UpdateUserProfileModel request)
+    {
+        if (request is null || string.IsNullOrEmpty(request.Name?.Trim()) || string.IsNullOrEmpty(request.Surname?.Trim()) || string.IsNullOrEmpty(request.Address?.Trim()) || string.IsNullOrEmpty(request.CompanyName?.Trim()) || string.IsNullOrEmpty(request.Id?.Trim()))
+            return _userService.FailedResponse();
+        return await _userService.UpdateUserAsync(request);
+    }
 }

@@ -13,33 +13,35 @@
 }
 else
 {
-    <table class="table table-hover table-sm">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Full Name</th>
-                <th>Email Address</th>
-                <th>Status</th>
-                <th>Company Name</th>
-                <th scope="col" style="width: auto">#</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (UserList user in UserList)
-            {
+    <div class="p-2">
+        <table class="table table-hover table-sm">
+            <thead>
                 <tr>
-                    <td>@user.Username</td>
-                    <td>@user.Name @user.Surname</td>
-                    <td>@user.Email</td>
-                    <td><span class="badge bg-@(user.IsActive ? "success" : "danger") p-2">@(user.IsActive ? "Active" : "Passive")</span></td>
-                    <td>@user.CompanyName</td>
-                    <td>
-                        <button disabled="@IsBusy" class="d-flex justify-content-center align-items-center btn btn-sm btn-outline-secondary" @onclick="() => ChangeStatus(user.Id)">
-                            <ion-icon class="fs-6" name="sync-outline"></ion-icon>
-                        </button>
-                    </td>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Status</th>
+                    <th>Company Name</th>
+                    <th scope="col" style="width: auto">#</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (UserModel user in UserList)
+                {
+                    <tr>
+                        <td>@user.Username</td>
+                        <td>@user.Name @user.Surname</td>
+                        <td>@user.Email</td>
+                        <td><span class="badge bg-@(user.IsActive ? "success" : "danger") p-2">@(user.IsActive ? "Active" : "Passive")</span></td>
+                        <td>@user.CompanyName</td>
+                        <td>
+                            <button disabled="@IsBusy" class="d-flex justify-content-center align-items-center btn btn-sm btn-outline-secondary" @onclick="() => ChangeStatus(user.Id)">
+                                <ion-icon class="fs-6" name="sync-outline"></ion-icon>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

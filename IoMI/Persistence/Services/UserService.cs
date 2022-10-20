@@ -145,36 +145,16 @@ public class UserService : IUserService
 
         return new() { Success = result.Succeeded, Value = result.Succeeded };
     }
-    
-    private async Task<UserList[]> GetAllUsers()
-    {
-        UserList[] users = _userManager.Users.Select(user => new UserList()
-            {
-                Id = user.Id,
-                Username = user.ToString(),
-                Name = user.Name ?? "",
-                Surname = user.Surname ?? "",
-                Email = user.Email,
-                IsActive = user.IsActive,
-                Address = user.Address ?? "",
-                RegistryCode = user.RegistryCode,
-                CompanyName = user.CompanyName ?? ""
-            }).ToArray();
-        foreach (UserList user in users)
-            user.Role = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id));
 
-        return users;
-    }
-
-    public async Task<UserList[]> GetAllUserOfInstrument()
+    public async Task<UserModel[]> GetAllUserOfInstrument()
     {
-        UserList[] users = await GetAllUsers();
+        UserModel[] users = await GetAllUsers();
         return users.Where(user => user.Role?.FirstOrDefault() == "User").ToArray();
     }
 
-    public async Task<UserList[]> GetAllInspectors()
+    public async Task<UserModel[]> GetAllInspectors()
     {
-        UserList[] users = await GetAllUsers();
+        UserModel[] users = await GetAllUsers();
         return users.Where(user => user.Role?.FirstOrDefault() == "Inspector").ToArray();
     }
 
@@ -185,19 +165,40 @@ public class UserService : IUserService
             return FailedResponse("User not found.");
 
         user.IsActive = !user.IsActive;
-        IdentityResult result = await _userManager.UpdateAsync(user);
-        if (!result.Succeeded || result.Errors.Any())
-            return FailedResponse(result.Errors?.FirstOrDefault()?.Description ?? "Unknown error.");
-
-        return new() { Success = result.Succeeded, Value = result.Succeeded };
+        
+        return await UpdateUserManagerAsync(user);
     }
 
-
-
-    public bool DeleteUser(UserRegisterModel user)
+    public async Task<ServerResponse<UpdateUserProfileModel>> GetUserInfo()
     {
-        throw new NotImplementedException();
+        AppUser? user = await GetAuthUser();
+        if (user is null)
+            return new() { ErrorMessage = "Bad request. You're not authorized.", Success = false };
+
+        return new() { Success = true, Value = new() { Id = user.Id, Name = user.Name, Surname = user.Surname, Address = user.Address ?? "", CompanyName = user.CompanyName ?? "" } };
     }
+
+    public async Task<ServerResponse<bool>> UpdateUserAsync(UpdateUserProfileModel updateUser)
+    {
+        AppUser? user = await _userManager.FindByIdAsync(updateUser.Id);
+        if (user is null)
+            return FailedResponse("User not found!");
+
+        AppUser? loggedUser = await GetAuthUser();
+        if (loggedUser is null || loggedUser.Id != user.Id)
+            return FailedResponse("You're not authorized to this.");
+
+        user.Name = updateUser.Name;
+        user.Surname = updateUser.Surname;
+        user.CompanyName = updateUser.CompanyName;
+        user.Address = updateUser.Address;
+
+        return await UpdateUserManagerAsync(user);
+    }
+
+
+
+
 
     public Task<bool> DeleteUserAsync(Guid id)
     {
@@ -205,11 +206,53 @@ public class UserService : IUserService
     }
 
 
-    public Task<bool> UpdateUserAsync(UserRegisterModel user)
+    public bool DeleteUser(UserRegisterModel user)
     {
         throw new NotImplementedException();
     }
 
     public ServerResponse<bool> FailedResponse(string error = "Bad request.") =>
         new() { ErrorMessage = error, Success = false, Value = false };
+
+    private async Task<AppUser?> GetAuthUser()
+    {
+        string? username = _httpContextAccessor.HttpContext?.User?.Identity?.Name;
+        if (string.IsNullOrEmpty(username?.Trim()))
+            return null;
+
+        AppUser user = await _userManager.FindByNameAsync(username);
+        if (user is null)
+            return null;
+
+        return user;
+    }
+
+    private async Task<UserModel[]> GetAllUsers()
+    {
+        UserModel[] users = _userManager.Users.Select(user => new UserModel()
+        {
+            Id = user.Id,
+            Username = user.ToString(),
+            Name = user.Name ?? "",
+            Surname = user.Surname ?? "",
+            Email = user.Email,
+            IsActive = user.IsActive,
+            Address = user.Address ?? "",
+            RegistryCode = user.RegistryCode,
+            CompanyName = user.CompanyName ?? ""
+        }).ToArray();
+        foreach (UserModel user in users)
+            user.Role = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id));
+
+        return users;
+    }
+
+    private async Task<ServerResponse<bool>> UpdateUserManagerAsync(AppUser user)
+    {
+        IdentityResult result = await _userManager.UpdateAsync(user);
+        if (!result.Succeeded || result.Errors.Any())
+            return FailedResponse(result.Errors?.FirstOrDefault()?.Description ?? "Unknown error.");
+
+        return new() { Success = result.Succeeded, Value = result.Succeeded };
+    }
 }

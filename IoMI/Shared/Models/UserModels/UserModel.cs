@@ -1,6 +1,6 @@
 ﻿namespace IoMI.Shared.Models.UserModels;
 
-public class UserList
+public class UserModel
 {
     public string Id { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;

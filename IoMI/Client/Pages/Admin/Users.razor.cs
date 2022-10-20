@@ -9,7 +9,7 @@ namespace IoMI.Client.Pages.Admin;
 public class UsersCode : ComponentBase
 {
     [Inject] HttpClient Http { get; set; } = default!;
-    protected UserList[]? UserList { get; set; }
+    protected UserModel[]? UserList { get; set; }
     protected bool IsBusy { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -28,7 +28,7 @@ public class UsersCode : ComponentBase
 
     private async Task GetUserList()
     {
-        UserList = await Http.GetFromJsonAsync<UserList[]>("User/GetUsers");
+        UserList = await Http.GetFromJsonAsync<UserModel[]>("User/GetUsers");
     }
 
 }
