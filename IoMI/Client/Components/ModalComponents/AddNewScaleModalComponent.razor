@@ -1,0 +1,73 @@
+﻿@inherits BaseModalComponent
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-backdrop fade show" @onclick="Cancel"></div>
+    <div class="modal-dialog" style="z-index: 1050">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-2">
+                <h5 class="modal-title d-flex align-items-center"> <ion-icon class="fs-2 me-2" name="download-outline"></ion-icon> Add New Scale </h5>
+                <button type="button" class="btn-close me-0" aria-label="Close" @onclick="Cancel">
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@Scale" OnValidSubmit="@ScaleValidated">
+                    <DataAnnotationsValidator />
+                    <div class="mb-3">
+                        <span class="form-label">Brand</span>
+                        <InputText class="form-control" @bind-Value="@Scale.Brand" />
+                        <ValidationMessage For="() => Scale.Brand" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Type or Model</span>
+                        <InputText class="form-control" @bind-Value="@Scale.TypeOrModel" />
+                        <ValidationMessage For="() => Scale.TypeOrModel" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Serial Number</span>
+                        <InputText class="form-control" @bind-Value="@Scale.SerialNumber" />
+                        <ValidationMessage For="() => Scale.SerialNumber" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Accuracy Class</span>
+                        <InputText class="form-control" @bind-Value="@Scale.AccuracyClass" />
+                        <ValidationMessage For="() => Scale.AccuracyClass" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Maximum Capacity</span>
+                        <InputText class="form-control" @bind-Value="@Scale.MaximumCapacity" />
+                        <ValidationMessage For="() => Scale.MaximumCapacity" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Last Inspection or Production Year</span>
+                        <InputText class="form-control" @bind-Value="@Scale.LastInspectionYear" />
+                        <ValidationMessage For="() => Scale.LastInspectionYear" />
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <ButtonComponent Caption="Add" Color="success" IsBusy="@IsBusy" Icon="checkmark-sharp" />
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer p-1">
+                <ButtonComponent Caption="Cancel" Color="danger" Icon="close-sharp" OnClick="@Canceled" IsOutline=true />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private AddNewScaleModel Scale = new();
+    private bool IsBusy { get; set; } = false;
+
+    public async Task ScaleValidated()
+    {
+        IsBusy = true;
+        await Confirmed();
+    }
+
+    public async override Task SetParametersAsync(ParameterView parameters)
+    {
+        await base.SetParametersAsync(parameters);
+    }
+    private async Task Cancel() => await Canceled();
+}

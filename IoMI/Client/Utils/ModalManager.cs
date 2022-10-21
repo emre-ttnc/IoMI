@@ -27,4 +27,11 @@ public class ModalManager
         var result = await _modalService.Show<ConfirmModalComponent>(title, mParams, options).Result;
         return result.Confirmed;
     }
+
+    public async Task<bool> ShowNewScaleModalAsync()
+    {
+        ModalOptions options = new() { UseCustomLayout = true, AnimationType = ModalAnimationType.None };
+        ModalResult result = await _modalService.Show<AddNewScaleModalComponent>(title: "", options: options).Result;
+        return result.Confirmed;
+    }
 }

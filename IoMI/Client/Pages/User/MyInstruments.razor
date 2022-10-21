@@ -1,0 +1,35 @@
+﻿@page "/myinstruments"
+@inject ModalManager Modal
+<div class="row gap-5 justify-content-center m-0">
+    <button class="btn btn-success" @onclick="Modal.ShowNewScaleModalAsync">Add New Scale</button>
+    <div class="col col-md-5 card p-0">
+        <div class="card-header">
+            Add New Gas Meter
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <span class="form-label">Brand</span>
+                <input type="text" aria-label="Brand" class="form-control">
+            </div>
+            <div class="mb-3">
+                <span class="form-label">Type or Model</span>
+                <input type="text" aria-label="Type or Model" class="form-control">
+            </div>
+            <div class="mb-3">
+                <span class="form-label">Serial Number</span>
+                <input type="text" aria-label="Serial Number" class="form-control">
+            </div>
+            <div class="mb-3">
+                <span class="form-label">Max Flow Rate</span>
+                <input type="text" aria-label="Accuracy Class" class="form-control">
+            </div>
+        </div>
+        <div class="card-footer">
+            Footer
+        </div>
+    </div>
+</div>
+
+@code {
+
+}
