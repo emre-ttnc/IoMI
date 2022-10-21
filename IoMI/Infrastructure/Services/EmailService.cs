@@ -44,7 +44,7 @@ public class EmailService : IEmailService
         StringBuilder mailBody = new();
 
         mailBody.Append("<div style=\"display: flex; flex-direction: column; box-sizing; border-box; padding: 32px; font-family: Trebuchet MS, Verdana; font-size: 18px;\">");
-        mailBody.Append("<div style=\"display: flex; flex-direction: column; background-color: darkslategray; padding: 16px; border-radius: 8px; box-shadow: 0px 0px 8px gray; color: white; text-align: center;\">");
+        mailBody.Append("<div style=\"display: flex; background-color: darkslategray; padding: 16px; border-radius: 8px; box-shadow: 0px 0px 8px gray; color: white; text-align: center; flex-direction: column; align-items: center;\">");
         mailBody.Append("<h3 style=\"margin: 8px 0;\">Hello,</h3><p>Welcome to IoMI!</p><p></p>");
         mailBody.Append("<p>We have just received your registration request.</p><p>Click the link below to confirm your email.</p><a target=\"blank\" href=\"");
         mailBody.Append(_configuration["ClientUrl"]);

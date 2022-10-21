@@ -11,5 +11,5 @@ public class UserModel
     public string Address { get; set; } = string.Empty;
     public string CompanyName { get; set; } = string.Empty;
     public string? RegistryCode { get; set; }
-    public IList<string>? Role { get; set; }
+    public string? Role { get; set; }
 }

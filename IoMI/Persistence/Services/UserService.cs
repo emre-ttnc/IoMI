@@ -13,12 +13,14 @@ public class UserService : IUserService
     private readonly UserManager<AppUser> _userManager;
     private readonly IEmailService _emailService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly RoleManager<UserRole> _roleManager;
 
-    public UserService(UserManager<AppUser> userManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor)
+    public UserService(UserManager<AppUser> userManager, IEmailService emailService, IHttpContextAccessor httpContextAccessor, RoleManager<UserRole> roleManager)
     {
         _userManager = userManager;
         _emailService = emailService;
         _httpContextAccessor = httpContextAccessor;
+        _roleManager = roleManager;
     }
 
 
@@ -42,6 +44,9 @@ public class UserService : IUserService
         }, user.Password);
         if (!result.Succeeded || result.Errors.Any())
             return new ServerResponse<bool>() { ErrorMessage = result.Errors.FirstOrDefault()?.Code ?? "Unknown error.", Success = false };
+
+        if (!await AddRoleAsync(await _userManager.FindByNameAsync(user.Username), "User"))
+            return FailedResponse("Role adding failed.");
 
         if (!string.IsNullOrEmpty(user.Email))
             return await SendEmailConfirmationTokenAsync(user.Email);
@@ -149,13 +154,13 @@ public class UserService : IUserService
     public async Task<UserModel[]> GetAllUserOfInstrument()
     {
         UserModel[] users = await GetAllUsers();
-        return users.Where(user => user.Role?.FirstOrDefault() == "User").ToArray();
+        return users.Where(user => user.Role == "User").ToArray();
     }
 
     public async Task<UserModel[]> GetAllInspectors()
     {
         UserModel[] users = await GetAllUsers();
-        return users.Where(user => user.Role?.FirstOrDefault() == "Inspector").ToArray();
+        return users.Where(user => user.Role == "Inspector").ToArray();
     }
 
     public async Task<ServerResponse<bool>> ChangeStatus(string id)
@@ -242,7 +247,10 @@ public class UserService : IUserService
             CompanyName = user.CompanyName ?? ""
         }).ToArray();
         foreach (UserModel user in users)
-            user.Role = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id));
+        {
+            ICollection<string> roles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id));
+            user.Role = roles.FirstOrDefault();
+        }
 
         return users;
     }
@@ -254,5 +262,14 @@ public class UserService : IUserService
             return FailedResponse(result.Errors?.FirstOrDefault()?.Description ?? "Unknown error.");
 
         return new() { Success = result.Succeeded, Value = result.Succeeded };
+    }
+
+    private async Task<bool> AddRoleAsync(AppUser user, string role)
+    {
+        if (!await _roleManager.RoleExistsAsync(role))
+            await _roleManager.CreateAsync(new() { Name = role });
+
+        IdentityResult result = await _userManager.AddToRoleAsync(user, role);
+        return result.Succeeded;
     }
 }

@@ -26,8 +26,17 @@ public class InspectorsCode : ComponentBase
         IsBusy = false;
     }
 
+    public async Task ChangeRoleToUser(string id)
+    {
+        IsBusy = true;
+        ServerResponse<bool> response = await Http.PostAndGetServerResponseAsync<bool, ChangeRoleModel>("Auth/ChangeRole", new ChangeRoleModel() { Id = id, RoleName = "User" });
+        if (response is not null && response.Success)
+            await GetUserList();
+        IsBusy = false;
+    }
+
     private async Task GetUserList()
     {
-        UserList = await Http.GetFromJsonAsync<UserModel[]>("User/GetUsers");
+        UserList = await Http.GetFromJsonAsync<UserModel[]>("User/GetInspectors");
     }
 }

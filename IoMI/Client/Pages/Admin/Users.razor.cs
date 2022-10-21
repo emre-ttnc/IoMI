@@ -31,4 +31,12 @@ public class UsersCode : ComponentBase
         UserList = await Http.GetFromJsonAsync<UserModel[]>("User/GetUsers");
     }
 
+    public async Task ChangeRoleToInspector(string id)
+    {
+        IsBusy = true;
+        ServerResponse<bool> response = await Http.PostAndGetServerResponseAsync<bool, ChangeRoleModel>("Auth/ChangeRole", new ChangeRoleModel() { Id = id, RoleName = "Inspector" });
+        if (response is not null && response.Success)
+            await GetUserList();
+        IsBusy = false;
+    }
 }

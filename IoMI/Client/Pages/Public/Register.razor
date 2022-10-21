@@ -64,6 +64,6 @@
         await Modal.ShowMessageModalAsync("Task completed.", response.Success ? $"We sent an email to {User.Email}." : response.ErrorMessage ?? "Unknown error.");
         User = new() { Id = Guid.NewGuid() };
         BtnIsBusy = false;
-        if (response.Success) NavManager.NavigateTo("/user/login");
+        if (response.Success) NavManager.NavigateTo("/");
     }
 }

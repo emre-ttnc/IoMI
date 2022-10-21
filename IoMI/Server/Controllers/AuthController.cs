@@ -1,6 +1,8 @@
 ﻿using IoMI.Application.Services;
 using IoMI.Shared.Models.ServerResponseModels;
 using IoMI.Shared.Models.UserModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IoMI.Server.Controllers;
@@ -24,4 +26,12 @@ public class AuthController : ControllerBase
         return await _authService.LoginAsync(request);
     }
 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "SystemAdmin")]
+    [HttpPost("ChangeRole")]
+    public async Task<ServerResponse<bool>> ChangeRole(ChangeRoleModel request)
+    {
+        if (string.IsNullOrEmpty(request.Id.Trim()) || string.IsNullOrEmpty(request.RoleName.Trim()))
+            return new() { ErrorMessage = "Bad request. Id or role can not be null or empty", Success = false };
+        return await _authService.ChangeRoleAsync(request);
+    }
 }

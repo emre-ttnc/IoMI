@@ -20,8 +20,9 @@ else
                     <th>Username</th>
                     <th>Full Name</th>
                     <th>Email Address</th>
-                    <th>Status</th>
                     <th>Company Name</th>
+                    <th>Status</th>
+                    <th>Role</th>
                     <th scope="col" style="width: auto">#</th>
                 </tr>
             </thead>
@@ -32,11 +33,17 @@ else
                         <td>@user.Username</td>
                         <td>@user.Name @user.Surname</td>
                         <td>@user.Email</td>
-                        <td><span class="badge bg-@(user.IsActive ? "success" : "danger") p-2">@(user.IsActive ? "Active" : "Passive")</span></td>
                         <td>@user.CompanyName</td>
                         <td>
-                            <button disabled="@IsBusy" class="d-flex justify-content-center align-items-center btn btn-sm btn-outline-secondary" @onclick="() => ChangeStatus(user.Id)">
-                                <ion-icon class="fs-6" name="sync-outline"></ion-icon>
+                            <button disabled="@IsBusy" class="d-flex justify-content-center align-items-center btn btn-sm btn-outline-@(user.IsActive ? "success" : "danger")" @onclick="() => ChangeStatus(user.Id)">
+                                <ion-icon class="fs-5 me-2" name="sync-outline"></ion-icon>
+                                @(user.IsActive ? "Active" : "Passive")
+                            </button>
+                        </td>
+                        <td>@user.Role</td>
+                        <td>
+                            <button disabled="@IsBusy" class="d-flex justify-content-center align-items-center btn btn-sm btn-outline-secondary" @onclick="() => ChangeRoleToInspector(user.Id)">
+                                Set As Inspector
                             </button>
                         </td>
                     </tr>
