@@ -47,7 +47,7 @@ public class InstrumentService : IInstrumentService
         return user;
     }
 
-    public async Task<ServerResponse<bool>> CreateGasMeter(GasMeterModel gasMeter)
+    public async Task<ServerResponse<bool>> CreateGasMeter(AddNewGasMeterModel gasMeter)
     {
         GasMeter? resultGasMeter = await _gasMeterReadRepository.Table.AsNoTracking().FirstOrDefaultAsync(gm => gm.Brand == gasMeter.Brand && gm.TypeOrModel == gasMeter.TypeOrModel && gm.SerialNumber == gasMeter.SerialNumber);
         if (resultGasMeter is not null)
@@ -64,7 +64,7 @@ public class InstrumentService : IInstrumentService
             TypeOrModel = gasMeter.TypeOrModel,
             SerialNumber = gasMeter.SerialNumber,
             IsActive = true,
-            LastInspectionYear = gasMeter.LastInspectionYear,
+            LastInspectionYear = Convert.ToInt32(gasMeter.LastInspectionYear),
             UserOfInstrument = user,
             MaxFlowRate = gasMeter.MaxFlowRate,
         });
@@ -72,7 +72,7 @@ public class InstrumentService : IInstrumentService
         return new() { Success = result, Value = result };
     }
 
-    public async Task<ServerResponse<bool>> CreateScale(ScaleModel scale)
+    public async Task<ServerResponse<bool>> CreateScale(AddNewScaleModel scale)
     {
         Scale? resulScale = await _scaleReadRepository.Table.AsNoTracking().FirstOrDefaultAsync(s => s.Brand == scale.Brand && s.TypeOrModel == scale.TypeOrModel && s.SerialNumber == scale.SerialNumber);
         if (resulScale is not null)
@@ -89,9 +89,10 @@ public class InstrumentService : IInstrumentService
             TypeOrModel = scale.TypeOrModel,
             SerialNumber = scale.SerialNumber,
             IsActive = true,
-            LastInspectionYear = scale.LastInspectionYear,
-            UserOfInstrument = user,
-            AccuracyClass = scale.AccuracyClass
+            LastInspectionYear = Convert.ToInt32(scale.LastInspectionYear),
+            MaximumCapacity = scale.MaximumCapacity,
+            AccuracyClass = scale.AccuracyClass,
+            UserOfInstrument = user
         });
         await _scaleWriteRepository.SaveAsync();
         if (!result)

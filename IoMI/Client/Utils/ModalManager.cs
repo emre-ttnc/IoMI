@@ -34,4 +34,11 @@ public class ModalManager
         ModalResult result = await _modalService.Show<AddNewScaleModalComponent>(title: "", options: options).Result;
         return result.Confirmed;
     }
+
+    public async Task<bool> ShowNewGasMeterModalAsync()
+    {
+        ModalOptions options = new() { UseCustomLayout = true, AnimationType = ModalAnimationType.None };
+        ModalResult result = await _modalService.Show<AddNewGasMeterModalComponent>(title: "", options: options).Result;
+        return result.Confirmed;
+    }
 }

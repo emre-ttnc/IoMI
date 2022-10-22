@@ -21,6 +21,7 @@ public static class ServiceRegistration
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IInstrumentService, InstrumentService>();
 
         services.AddScoped<IScaleReadRepository, ScaleReadRepository>();
         services.AddScoped<IScaleWriteRepository, ScaleWriteRepository>();

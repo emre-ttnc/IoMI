@@ -5,8 +5,8 @@ namespace IoMI.Application.Services;
 
 public interface IInstrumentService
 {
-    Task<ServerResponse<bool>> CreateScale(ScaleModel scale);
-    Task<ServerResponse<bool>> CreateGasMeter(GasMeterModel gasMeter);
+    Task<ServerResponse<bool>> CreateScale(AddNewScaleModel scale);
+    Task<ServerResponse<bool>> CreateGasMeter(AddNewGasMeterModel gasMeter);
     Task<ServerResponse<bool>> UpdateScale(ScaleModel scale);
     Task<ServerResponse<bool>> UpdateGasMeter(GasMeterModel gasMeter);
     Task<ServerResponse<bool>> DeleteScale(string id);
