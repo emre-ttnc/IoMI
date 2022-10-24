@@ -17,7 +17,7 @@
             }
             else
             {
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Brand</th>
@@ -25,6 +25,7 @@
                             <th scope="col">Serial Number</th>
                             <th scope="col">Last Inspection Year</th>
                             <th scope="col">Is Active</th>
+                            <th scope="col">#</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,6 +37,7 @@
                                 <td>@scale.SerialNumber</td>
                                 <td>@scale.LastInspectionYear</td>
                                 <td>@scale.IsActive</td>
+                                <td><button class="btn btn-warning py-0" @onclick="() => EditScale(scale)">Edit</button></td>
                             </tr>
                         }
                     </tbody>
@@ -58,7 +60,7 @@
             }
             else
             {
-                <table class="table">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th scope="col">Brand</th>
@@ -66,6 +68,7 @@
                             <th scope="col">Serial Number</th>
                             <th scope="col">Last Inspection Year</th>
                             <th scope="col">Is Active</th>
+                            <th scope="col">#</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,6 +80,7 @@
                                 <td>@gasMeter.SerialNumber</td>
                                 <td>@gasMeter.LastInspectionYear</td>
                                 <td>@gasMeter.IsActive</td>
+                                <td><button class="btn btn-warning py-0" @onclick="() => EditGasMeter(gasMeter)">Edit</button></td>
                             </tr>
                         }
                     </tbody>

@@ -1,0 +1,76 @@
+﻿@inherits BaseModalComponent
+@inject HttpClient Http
+@inject ModalManager Modal
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-backdrop fade show" @onclick="Cancel"></div>
+    <div class="modal-dialog" style="z-index: 1050">
+        <div class="modal-content">
+            <div class="modal-header bg-light p-2">
+                <h5 class="modal-title d-flex align-items-center"> <ion-icon class="fs-2 me-2" name="settings-outline"></ion-icon> Update Gas Meter </h5>
+                <button type="button" class="btn-close me-0" aria-label="Close" @onclick="Cancel">
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@GasMeter" OnValidSubmit="@GasMeterValidated">
+                    <DataAnnotationsValidator />
+                    <div class="mb-3">
+                        <span class="form-label">Brand</span>
+                        <InputText class="form-control" @bind-Value="@GasMeter.Brand" />
+                        <ValidationMessage For="() => GasMeter.Brand" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Type or Model</span>
+                        <InputText class="form-control" @bind-Value="@GasMeter.TypeOrModel" />
+                        <ValidationMessage For="() => GasMeter.TypeOrModel" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Serial Number</span>
+                        <InputText class="form-control" @bind-Value="@GasMeter.SerialNumber" />
+                        <ValidationMessage For="() => GasMeter.SerialNumber" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Max Flow Rate</span>
+                        <InputText class="form-control" @bind-Value="@GasMeter.MaxFlowRate" />
+                        <ValidationMessage For="() => GasMeter.MaxFlowRate" />
+                    </div>
+                    <div class="mb-3">
+                        <span class="form-label">Last Inspection or Production Year</span>
+                        <InputText class="form-control" @bind-Value="@GasMeter.LastInspectionYear" />
+                        <ValidationMessage For="() => GasMeter.LastInspectionYear" />
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <ButtonComponent Caption="Update" Color="success" IsBusy="@IsBusy" Icon="checkmark-sharp" />
+                    </div>
+                </EditForm>
+            </div>
+            <div class="modal-footer p-1">
+                <ButtonComponent Caption="Cancel" Color="danger" Icon="close-sharp" OnClick="@Canceled" IsOutline=true />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public AddNewGasMeterModel GasMeter { get; set; } = new();
+    private bool IsBusy { get; set; } = false;
+
+    public async Task GasMeterValidated()
+    {
+        IsBusy = true;
+        ServerResponse<bool> response = await Http.PostAndGetServerResponseAsync<bool, AddNewGasMeterModel>("Instrument/UpdateGasMeter", GasMeter);
+        if (response is not null && response.Success)
+            await Confirmed();
+        else
+            await Modal.ShowMessageModalAsync("Failed", response?.ErrorMessage ?? "Unknown error.");
+        IsBusy = false;
+    }
+
+    public async override Task SetParametersAsync(ParameterView parameters)
+    {
+        GasMeter = parameters.GetValueOrDefault<AddNewGasMeterModel>("GasMeter") ?? new();
+        await base.SetParametersAsync(parameters);
+    }
+    private async Task Cancel() => await Canceled();
+}

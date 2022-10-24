@@ -11,7 +11,7 @@ public class MyInstrumentsCode : ComponentBase
     [Inject] HttpClient Http { get; set; } = default!;
     [Inject] ModalManager Modal { get; set; } = default!;
 
-    public List<ScaleModel>? Scales = new ();
+    public List<ScaleModel>? Scales = new();
     public List<GasMeterModel>? GasMeters = new();
 
     protected override async Task OnInitializedAsync()
@@ -50,5 +50,19 @@ public class MyInstrumentsCode : ComponentBase
             GasMeters = response.Value;
         else
             await Modal.ShowMessageModalAsync("Error.", response?.ErrorMessage ?? "Unknown error occured.");
+    }
+
+    protected async Task EditScale(ScaleModel scale)
+    {
+        bool result = await Modal.ShowUpdateScaleModalAsync(new() { Id = scale.Id, Brand = scale.Brand, TypeOrModel = scale.TypeOrModel, SerialNumber = scale.SerialNumber, LastInspectionYear = scale.LastInspectionYear.ToString(), AccuracyClass = scale.AccuracyClass, MaximumCapacity = scale.MaximumCapacity });
+        if (result)
+            await GetScales();
+    }
+
+    protected async Task EditGasMeter(GasMeterModel gasMeter)
+    {
+        bool result = await Modal.ShowUpdateGasMeterModalAsync(new() { Id = gasMeter.Id, Brand = gasMeter.Brand, TypeOrModel = gasMeter.TypeOrModel, SerialNumber = gasMeter.SerialNumber, LastInspectionYear = gasMeter.LastInspectionYear.ToString(), MaxFlowRate = gasMeter.MaxFlowRate });
+        if (result)
+            await GetGasMeters();
     }
 }

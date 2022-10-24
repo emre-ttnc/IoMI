@@ -118,11 +118,15 @@ public class InstrumentService : IInstrumentService
 
     public async Task<ServerResponse<bool>> UpdateGasMeter(GasMeterModel gasMeter)
     {
-        GasMeter? resultGasMeter = await _gasMeterReadRepository.GetByIdAsync(gasMeter.Id);
+        GasMeter? resultGasMeter = await _gasMeterReadRepository.Table.Include(gm => gm.UserOfInstrument).FirstOrDefaultAsync(gm => gm.Id == gasMeter.Id);
         if (resultGasMeter is null)
             return FailedResponse("Gas meter not found.");
 
-        GasMeter? duplicateGasMeter = await _gasMeterReadRepository.Table.FirstOrDefaultAsync(gm => gm.Brand == resultGasMeter.Brand && gm.TypeOrModel == resultGasMeter.TypeOrModel && gm.SerialNumber == resultGasMeter.SerialNumber);
+        AppUser? user = await GetAuthUser();
+        if (user is null || resultGasMeter.UserOfInstrument?.Id.ToString() != user.Id)
+            return FailedResponse("Unauthorized request.");
+
+        GasMeter? duplicateGasMeter = await _gasMeterReadRepository.Table.FirstOrDefaultAsync(gm => gm.Brand == gasMeter.Brand && gm.TypeOrModel == gasMeter.TypeOrModel && gm.SerialNumber == gasMeter.SerialNumber);
         if (duplicateGasMeter is not null)
             return FailedResponse("This gas meter already registered.");
 
@@ -140,9 +144,13 @@ public class InstrumentService : IInstrumentService
 
     public async Task<ServerResponse<bool>> UpdateScale(ScaleModel scale)
     {
-        Scale? resultScale = await _scaleReadRepository.GetByIdAsync(scale.Id);
+        Scale? resultScale = await _scaleReadRepository.Table.Include(s => s.UserOfInstrument).FirstOrDefaultAsync(s => s.Id == scale.Id);
         if (resultScale is null)
             return FailedResponse("Scale not found.");
+
+        AppUser? user = await GetAuthUser();
+        if (user is null || resultScale.UserOfInstrument?.Id.ToString() != user.Id)
+            return FailedResponse("Unauthorized request.");
 
         Scale? duplicateScale = await _scaleReadRepository.Table.FirstOrDefaultAsync(s => s.Brand == scale.Brand && s.TypeOrModel == scale.TypeOrModel && s.SerialNumber == scale.SerialNumber);
         if (duplicateScale is not null)
