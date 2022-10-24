@@ -9,6 +9,7 @@ namespace IoMI.Server.Controllers;
 
 [Route("[controller]")]
 [ApiController]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User, SystemAdmin")]
 public class InstrumentController : ControllerBase
 {
     private readonly IInstrumentService _instrumentService;
@@ -18,7 +19,6 @@ public class InstrumentController : ControllerBase
         _instrumentService = instrumentService;
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User, SystemAdmin")]
     [HttpPost("AddNewScale")]
     public async Task<ServerResponse<bool>> AddNewScale(AddNewScaleModel request)
     {
@@ -35,7 +35,6 @@ public class InstrumentController : ControllerBase
         return await _instrumentService.CreateScale(request);
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "User, SystemAdmin")]
     [HttpPost("AddNewGasMeter")]
     public async Task<ServerResponse<bool>> AddNewGasMeter(AddNewGasMeterModel request)
     {
@@ -51,5 +50,9 @@ public class InstrumentController : ControllerBase
         return await _instrumentService.CreateGasMeter(request);
     }
 
-    
+    [HttpGet("GetMyGasMeters")]
+    public async Task<ServerResponse<List<GasMeterModel>>> GetMyGasMeters() => await _instrumentService.GetMyGasMeters();
+
+    [HttpGet("GetMyScales")]
+    public async Task<ServerResponse<List<ScaleModel>>> GetMyScales() => await _instrumentService.GetMyScales();
 }

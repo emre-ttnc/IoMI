@@ -161,6 +161,47 @@ public class InstrumentService : IInstrumentService
         return new() { Success = result, Value = result };
     }
 
+    public async Task<ServerResponse<List<ScaleModel>>> GetMyScales()
+    {
+        AppUser? appUser = await GetAuthUser();
+        if (appUser is null)
+            return new() { ErrorMessage = "Unauthorized request.", Success = false };
+
+        List<ScaleModel> scales = await _scaleReadRepository.Table.AsNoTracking().Where(s => s.UserOfInstrument == appUser).Select(scale => new ScaleModel()
+        {
+            Id = scale.Id,
+            Brand = scale.Brand,
+            TypeOrModel = scale.TypeOrModel,
+            SerialNumber = scale.SerialNumber,
+            AccuracyClass = scale.AccuracyClass,
+            MaximumCapacity = scale.MaximumCapacity,
+            LastInspectionYear = scale.LastInspectionYear,
+            IsActive = scale.IsActive
+        }).ToListAsync();
+
+        return new() { Success = true, Value = scales };
+    }
+
+    public async Task<ServerResponse<List<GasMeterModel>>> GetMyGasMeters()
+    {
+        AppUser? appUser = await GetAuthUser();
+        if (appUser is null)
+            return new() { ErrorMessage = "Unauthorized request.", Success = false };
+
+        List<GasMeterModel> gasMeters = await _gasMeterReadRepository.Table.AsNoTracking().Where(gm => gm.UserOfInstrument == appUser).Select(gasmeter => new GasMeterModel()
+        {
+            Id = gasmeter.Id,
+            Brand = gasmeter.Brand,
+            TypeOrModel = gasmeter.TypeOrModel,
+            SerialNumber = gasmeter.SerialNumber,
+            MaxFlowRate = gasmeter.MaxFlowRate,
+            LastInspectionYear = gasmeter.LastInspectionYear,
+            IsActive = gasmeter.IsActive
+        }).ToListAsync();
+
+        return new() { Success = true, Value = gasMeters };
+    }
+
     public ServerResponse<bool> FailedResponse(string error = "Bad request.") =>
     new() { ErrorMessage = error, Success = false, Value = false };
 }

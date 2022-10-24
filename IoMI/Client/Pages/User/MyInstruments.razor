@@ -1,80 +1,89 @@
 ﻿@page "/myinstruments"
-@inject ModalManager Modal
+@inherits MyInstrumentsCode
+
 <div class="row gap-5 justify-content-center m-0">
-	<div class="card p-0">
-		<div class="card-header d-flex justify-content-between">
-			<h4>Scales</h4>
-			<button class="btn btn-success" @onclick="Modal.ShowNewScaleModalAsync">Add New Scale</button>
-		</div>
-		<div class="card-body">
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">First</th>
-						<th scope="col">Last</th>
-						<th scope="col">Handle</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th scope="row">1</th>
-						<td>Mark</td>
-						<td>Otto</td>
-						<td>mdo</td>
-					</tr>
-					<tr>
-						<th scope="row">2</th>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>fat</td>
-					</tr>
-					<tr>
-						<th scope="row">3</th>
-						<td colspan="2">Larry the Bird</td>
-						<td>twitter</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
-	<div class="card p-0">
-		<div class="card-header d-flex justify-content-between">
-			<h4>Gas Meters</h4>
-			<button class="btn btn-success" @onclick="Modal.ShowNewGasMeterModalAsync">Add New Gas Meter</button>
-		</div>
-		<div class="card-body">
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">First</th>
-						<th scope="col">Last</th>
-						<th scope="col">Handle</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th scope="row">1</th>
-						<td>Mark</td>
-						<td>Otto</td>
-						<td>mdo</td>
-					</tr>
-					<tr>
-						<th scope="row">2</th>
-						<td>Jacob</td>
-						<td>Thornton</td>
-						<td>fat</td>
-					</tr>
-					<tr>
-						<th scope="row">3</th>
-						<td colspan="2">Larry the Bird</td>
-						<td>twitter</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-	</div>
+    <div class="card p-0">
+        <div class="card-header d-flex justify-content-between">
+            <h4>Scales</h4>
+            <button class="btn btn-success" @onclick="OpenNewScaleModal">Add New Scale</button>
+        </div>
+        <div class="card-body">
+            @if (Scales is null || Scales.Count < 1)
+            {
+                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <div class="spinner-border"></div>
+                    <div class="fs-3">Please wait...</div>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Brand</th>
+                            <th scope="col">Type or Model</th>
+                            <th scope="col">Serial Number</th>
+                            <th scope="col">Last Inspection Year</th>
+                            <th scope="col">Is Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ScaleModel scale in Scales)
+                        {
+                            <tr>
+                                <td>@scale.Brand</td>
+                                <td>@scale.TypeOrModel</td>
+                                <td>@scale.SerialNumber</td>
+                                <td>@scale.LastInspectionYear</td>
+                                <td>@scale.IsActive</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+    <div class="card p-0">
+        <div class="card-header d-flex justify-content-between">
+            <h4>Gas Meters</h4>
+            <button class="btn btn-success" @onclick="OpenNewGasMeterModal">Add New Gas Meter</button>
+        </div>
+        <div class="card-body">
+            @if (GasMeters is null || GasMeters.Count < 1)
+            {
+                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <div class="spinner-border"></div>
+                    <div class="fs-3">Please wait...</div>
+                </div>
+            }
+            else
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Brand</th>
+                            <th scope="col">Type or Model</th>
+                            <th scope="col">Serial Number</th>
+                            <th scope="col">Last Inspection Year</th>
+                            <th scope="col">Is Active</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (GasMeterModel gasMeter in GasMeters)
+                        {
+                            <tr>
+                                <td>@gasMeter.Brand</td>
+                                <td>@gasMeter.TypeOrModel</td>
+                                <td>@gasMeter.SerialNumber</td>
+                                <td>@gasMeter.LastInspectionYear</td>
+                                <td>@gasMeter.IsActive</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
 </div>
 
 @code {
