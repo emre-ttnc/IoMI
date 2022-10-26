@@ -3,6 +3,7 @@ using System;
 using IoMI.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IoMI.Persistence.Migrations
 {
     [DbContext(typeof(IoMIDbContext))]
-    partial class IoMIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221025155936_mig2_application-added")]
+    partial class mig2_applicationadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

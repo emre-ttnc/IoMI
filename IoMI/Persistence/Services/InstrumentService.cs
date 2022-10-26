@@ -126,7 +126,7 @@ public class InstrumentService : IInstrumentService
         if (user is null || resultGasMeter.UserOfInstrument?.Id.ToString() != user.Id)
             return FailedResponse("Unauthorized request.");
 
-        GasMeter? duplicateGasMeter = await _gasMeterReadRepository.Table.FirstOrDefaultAsync(gm => gm.Brand == gasMeter.Brand && gm.TypeOrModel == gasMeter.TypeOrModel && gm.SerialNumber == gasMeter.SerialNumber);
+        GasMeter? duplicateGasMeter = await _gasMeterReadRepository.Table.FirstOrDefaultAsync(gm => gm.Id != gasMeter.Id && gm.Brand == gasMeter.Brand && gm.TypeOrModel == gasMeter.TypeOrModel && gm.SerialNumber == gasMeter.SerialNumber);
         if (duplicateGasMeter is not null)
             return FailedResponse("This gas meter already registered.");
 
@@ -152,7 +152,7 @@ public class InstrumentService : IInstrumentService
         if (user is null || resultScale.UserOfInstrument?.Id.ToString() != user.Id)
             return FailedResponse("Unauthorized request.");
 
-        Scale? duplicateScale = await _scaleReadRepository.Table.FirstOrDefaultAsync(s => s.Brand == scale.Brand && s.TypeOrModel == scale.TypeOrModel && s.SerialNumber == scale.SerialNumber);
+        Scale? duplicateScale = await _scaleReadRepository.Table.FirstOrDefaultAsync(s => s.Id != scale.Id && s.Brand == scale.Brand && s.TypeOrModel == scale.TypeOrModel && s.SerialNumber == scale.SerialNumber);
         if (duplicateScale is not null)
             return FailedResponse("This scale already registered.");
 

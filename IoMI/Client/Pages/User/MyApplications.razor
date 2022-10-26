@@ -1,6 +1,103 @@
 ﻿@page "/myapplications"
+@layout MainLayout
+@inherits MyApplicationsCode
 
-<h3>MyApplications</h3>
+<div class="row gap-5 justify-content-center m-0">
+    <div class="card p-0">
+        <div class="card-header d-flex justify-content-between">
+            <h5 class="m-0" style="line-height: 1.5em !important;">My Scale Inspection Applications</h5>
+            <button class="btn btn-success py-1">Create an Scale Inspection Application</button>
+        </div>
+        <div class="card-body">
+            @if (ScaleApplications is null)
+            {
+                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <div class="spinner-border"></div>
+                    <div class="fs-3">Please wait...</div>
+                </div>
+            }
+            else if (ScaleApplications.Count < 1)
+            {
+                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <div class="fs-5">There are no application in system.</div>
+                </div>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Application Date</th>
+                            <th scope="col">Applicant</th>
+                            <th scope="col">Is Accepted</th>
+                            <th scope="col">Is Completed</th>
+                            <th scope="col">#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ScaleInspectionApplicationModel application in ScaleApplications)
+                        {
+                            <tr>
+                                <td>@application.ApplicationDate</td>
+                                <td>@application.Applicant?.Name @application.Applicant?.Surname</td>
+                                <td>@application.IsAccepted</td>
+                                <td>@application.IsCompleted</td>
+                                <td><button class="btn btn-warning py-0" @onclick="() => SeeApplicationDetail(application)">See Details</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+    <div class="card p-0">
+        <div class="card-header d-flex justify-content-between">
+            <h5 class="m-0" style="line-height: 1.5em !important;">My Gas Meter Inspection Applications</h5>
+            <button class="btn btn-success py-1">Create an Gas Meter Inspection Application</button>
+        </div>
+        <div class="card-body">
+            @if (GasMeterApplications is null)
+            {
+                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <div class="spinner-border"></div>
+                    <div class="fs-3">Please wait...</div>
+                </div>
+            }
+            else if (GasMeterApplications.Count < 1)
+            {
+                <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                    <div class="fs-5">There are no application in system.</div>
+                </div>
+            }
+            else
+            {
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Application Date</th>
+                            <th scope="col">Applicant</th>
+                            <th scope="col">Is Accepted</th>
+                            <th scope="col">Is Completed</th>
+                            <th scope="col">#</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (GasMeterInspectionApplicationModel application in GasMeterApplications)
+                        {
+                            <tr>
+                                <td>@application.ApplicationDate</td>
+                                <td>@application.Applicant?.Name @application.Applicant?.Surname</td>
+                                <td>@application.IsAccepted</td>
+                                <td>@application.IsCompleted</td>
+                                <td><button class="btn btn-warning py-0" @onclick="() => SeeApplicationDetail(application)">See Details</button></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>
 
 @code {
 
