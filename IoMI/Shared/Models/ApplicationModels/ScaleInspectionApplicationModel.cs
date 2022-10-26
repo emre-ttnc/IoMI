@@ -4,5 +4,5 @@ namespace IoMI.Shared.Models.ApplicationModels;
 
 public class ScaleInspectionApplicationModel : BaseApplicationModel
 {
-    public ICollection<ScaleModel> Scales { get; set; } = new HashSet<ScaleModel>();
+    public ICollection<ScaleModel> Scales { get; set; } = new List<ScaleModel>();
 }

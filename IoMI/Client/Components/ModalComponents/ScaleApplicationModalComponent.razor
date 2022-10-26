@@ -1,0 +1,122 @@
+﻿@inherits BaseModalComponent
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-backdrop fade show" @onclick="Canceled"></div>
+    <div class="modal-dialog modal-xl" style="z-index: 1050">
+        <div class="modal-content">
+            <div class="modal-header p-2 bg-light">
+                <h5 class="modal-title d-flex align-items-center"> <ion-icon class="fs-2 me-2" name="download-outline"></ion-icon> Create a Scale Inspection Application </h5>
+                <button type="button" class="btn-close me-0" aria-label="Close" @onclick="Cancel">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card mb-3">
+                    <div class="card-header">Your Scales</div>
+                    @if (Scales is null || Scales.Count < 1)
+                    {
+                        <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                            <div class="fs-5"> Scale list is empty </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <table class="table table-hover table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Type or Model</th>
+                                    <th scope="col">Serial Number</th>
+                                    <th scope="col">Last Inspection Year</th>
+                                    <th scope="col">Is Active</th>
+                                    <th scope="col">#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (ScaleModel scale in Scales)
+                                {
+                                    <tr>
+                                        <td>@scale.Brand</td>
+                                        <td>@scale.TypeOrModel</td>
+                                        <td>@scale.SerialNumber</td>
+                                        <td>@scale.LastInspectionYear</td>
+                                        <td>@scale.IsActive</td>
+                                        <td>
+                                            <button class="btn btn-success d-flex justify-content-center px-2 py-1" @onclick="() => AddToApplication(scale)">
+                                                <ion-icon name="add-circle-outline"></ion-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">Selected Scales</div>
+                    @if (Application?.Scales is null || Application?.Scales.Count < 1)
+                    {
+                        <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                            <div class="fs-5">There is no selected scale</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <table class="table table-hover table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Type or Model</th>
+                                    <th scope="col">Serial Number</th>
+                                    <th scope="col">Last Inspection Year</th>
+                                    <th scope="col">Is Active</th>
+                                    <th scope="col">#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (ScaleModel scale in Application.Scales)
+                                {
+                                    <tr>
+                                        <td>@scale.Brand</td>
+                                        <td>@scale.TypeOrModel</td>
+                                        <td>@scale.SerialNumber</td>
+                                        <td>@scale.LastInspectionYear</td>
+                                        <td>@scale.IsActive</td>
+                                        <td>
+                                            <button class="btn btn-danger d-flex justify-content-center px-2 py-1" @onclick="() => RemoveFromApplication(scale)">
+                                                <ion-icon name="remove-circle-outline"></ion-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer p-1">
+                <ButtonComponent Caption="Add" Color="success" IsBusy="@IsBusy" Icon="checkmark-sharp" />
+                <ButtonComponent Caption="Cancel" Color="danger" Icon="close-sharp" OnClick="@Canceled" IsOutline=true />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public ScaleInspectionApplicationModel Application { get; set; } = new();
+    [Parameter] public List<ScaleModel> Scales { get; set; } = new();
+    private bool IsBusy { get; set; }
+
+    private void AddToApplication(ScaleModel selectedScale)
+    {
+        Application.Scales.Add(selectedScale);
+        Scales.Remove(selectedScale);
+    }
+
+    private void RemoveFromApplication(ScaleModel selectedScale)
+    {
+        Scales.Add(selectedScale);
+        Application.Scales.Remove(selectedScale);
+    }
+
+    private async Task Cancel() => await Canceled();
+}

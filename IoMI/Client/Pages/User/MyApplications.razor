@@ -6,7 +6,7 @@
     <div class="card p-0">
         <div class="card-header d-flex justify-content-between">
             <h5 class="m-0" style="line-height: 1.5em !important;">My Scale Inspection Applications</h5>
-            <button class="btn btn-success py-1">Create an Scale Inspection Application</button>
+            <button class="btn btn-success py-1" @onclick="() => ApplicationDetail(new ScaleInspectionApplicationModel())">Create Scale Inspection Application</button>
         </div>
         <div class="card-body">
             @if (ScaleApplications is null)
@@ -42,7 +42,7 @@
                                 <td>@application.Applicant?.Name @application.Applicant?.Surname</td>
                                 <td>@application.IsAccepted</td>
                                 <td>@application.IsCompleted</td>
-                                <td><button class="btn btn-warning py-0" @onclick="() => SeeApplicationDetail(application)">See Details</button></td>
+                                <td><button class="btn btn-warning py-0" @onclick="() => ApplicationDetail(application)">See Details</button></td>
                             </tr>
                         }
                     </tbody>
@@ -53,7 +53,7 @@
     <div class="card p-0">
         <div class="card-header d-flex justify-content-between">
             <h5 class="m-0" style="line-height: 1.5em !important;">My Gas Meter Inspection Applications</h5>
-            <button class="btn btn-success py-1">Create an Gas Meter Inspection Application</button>
+            <button class="btn btn-success py-1">Create Gas Meter Inspection Application</button>
         </div>
         <div class="card-body">
             @if (GasMeterApplications is null)
@@ -98,7 +98,3 @@
         </div>
     </div>
 </div>
-
-@code {
-
-}
