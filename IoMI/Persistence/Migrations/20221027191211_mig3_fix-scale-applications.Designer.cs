@@ -3,6 +3,7 @@ using System;
 using IoMI.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace IoMI.Persistence.Migrations
 {
     [DbContext(typeof(IoMIDbContext))]
-    partial class IoMIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221027191211_mig3_fix-scale-applications")]
+    partial class mig3_fixscaleapplications
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,21 +37,6 @@ namespace IoMI.Persistence.Migrations
                     b.HasIndex("InspectionsId");
 
                     b.ToTable("GasMeterGasMeterInspection");
-                });
-
-            modelBuilder.Entity("GasMeterGasMeterInspectionApplication", b =>
-                {
-                    b.Property<Guid>("ApplicationsId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("GasMetersId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ApplicationsId", "GasMetersId");
-
-                    b.HasIndex("GasMetersId");
-
-                    b.ToTable("GasMeterGasMeterInspectionApplication");
                 });
 
             modelBuilder.Entity("IoMI.Domain.Entities.ApplicationEntities.GasMeterInspectionApplication", b =>
@@ -155,6 +142,9 @@ namespace IoMI.Persistence.Migrations
                     b.Property<string>("Brand")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("GasMeterInspectionApplicationId")
+                        .HasColumnType("uuid");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
@@ -174,6 +164,8 @@ namespace IoMI.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GasMeterInspectionApplicationId");
 
                     b.HasIndex("UserOfInstrumentId");
 
@@ -476,21 +468,6 @@ namespace IoMI.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("GasMeterGasMeterInspectionApplication", b =>
-                {
-                    b.HasOne("IoMI.Domain.Entities.ApplicationEntities.GasMeterInspectionApplication", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IoMI.Domain.Entities.InstrumentEntities.GasMeter", null)
-                        .WithMany()
-                        .HasForeignKey("GasMetersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("IoMI.Domain.Entities.ApplicationEntities.GasMeterInspectionApplication", b =>
                 {
                     b.HasOne("IoMI.Domain.Entities.UserEntities.AppUser", "Applicant")
@@ -529,6 +506,10 @@ namespace IoMI.Persistence.Migrations
 
             modelBuilder.Entity("IoMI.Domain.Entities.InstrumentEntities.GasMeter", b =>
                 {
+                    b.HasOne("IoMI.Domain.Entities.ApplicationEntities.GasMeterInspectionApplication", null)
+                        .WithMany("GasMeters")
+                        .HasForeignKey("GasMeterInspectionApplicationId");
+
                     b.HasOne("IoMI.Domain.Entities.UserEntities.AppUser", "UserOfInstrument")
                         .WithMany()
                         .HasForeignKey("UserOfInstrumentId");
@@ -624,6 +605,11 @@ namespace IoMI.Persistence.Migrations
                         .HasForeignKey("ScalesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("IoMI.Domain.Entities.ApplicationEntities.GasMeterInspectionApplication", b =>
+                {
+                    b.Navigation("GasMeters");
                 });
 #pragma warning restore 612, 618
         }

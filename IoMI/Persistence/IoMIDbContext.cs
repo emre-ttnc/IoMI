@@ -15,7 +15,7 @@ public class IoMIDbContext : IdentityDbContext<AppUser, UserRole, string>
     public DbSet<Scale>? Scales { get; set; }
     public DbSet<GasMeterInspection>? GasMeterInspections { get; set; }
     public DbSet<ScaleInspection>? ScaleInspections { get; set; }
-    public DbSet<GasMeterInspectionApplication> GasMeterInspectionApplications { get; set; }
-    public DbSet<ScaleInspectionApplication> ScaleInspectionApplications { get; set; }
+    public DbSet<GasMeterInspectionApplication>? GasMeterInspectionApplications { get; set; }
+    public DbSet<ScaleInspectionApplication>? ScaleInspectionApplications { get; set; }
 
 }

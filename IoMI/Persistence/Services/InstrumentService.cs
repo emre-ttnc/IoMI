@@ -175,7 +175,7 @@ public class InstrumentService : IInstrumentService
         if (appUser is null)
             return new() { ErrorMessage = "Unauthorized request.", Success = false };
 
-        List<ScaleModel> scales = await _scaleReadRepository.Table.AsNoTracking().Where(s => s.UserOfInstrument == appUser).Select(scale => new ScaleModel()
+        List<ScaleModel> scales = await _scaleReadRepository.Table.Where(s => s.UserOfInstrument == appUser).Select(scale => new ScaleModel()
         {
             Id = scale.Id,
             Brand = scale.Brand,

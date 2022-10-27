@@ -13,11 +13,13 @@ public class MyApplicationsCode : ComponentBase
     [Inject] ModalManager Modal { get; set; } = default!;
     protected List<ScaleInspectionApplicationModel>? ScaleApplications { get; set; }
     protected List<GasMeterInspectionApplicationModel>? GasMeterApplications { get; set; }
+    protected bool IsLoading { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
         await GetScaleApplications();
         await GetGasMeterApplications();
+        IsLoading = false;
     }
 
     private async Task GetScaleApplications()
@@ -34,21 +36,53 @@ public class MyApplicationsCode : ComponentBase
             GasMeterApplications = response.Value;
     }
 
-    protected async Task ApplicationDetail(ScaleInspectionApplicationModel application)
+    protected async Task CreateNewScaleInspectionApplication()
     {
+        IsLoading = true;
         ServerResponse<List<ScaleModel>>? response = await Http.GetFromJsonAsync<ServerResponse<List<ScaleModel>>>("Instrument/GetMyScales");
         if (response is not null && response.Success)
         {
-            if (response.Value is not null && response.Value.Count > 0)
-                await Modal.ShowScaleApplicationModalAsync(application, response.Value);
+            if (response.Value is not null && response.Value.Any())
+            {
+                bool result = await Modal.ShowNewScaleApplicationModalAsync(response.Value);
+                if (result)
+                    await GetScaleApplications();
+                IsLoading = false;
+            }
             else
                 await Modal.ShowMessageModalAsync("Invalid request.", "First, you need to add at least one scale.");
         }
         else
             await Modal.ShowMessageModalAsync("Error.", response?.ErrorMessage ?? "Unknown error occured.");
     }
+    
+
+    protected async Task CreateNewGasMeterInspectionApplication()
+    {
+        IsLoading = true;
+        ServerResponse<List<GasMeterModel>>? response = await Http.GetFromJsonAsync<ServerResponse<List<GasMeterModel>>>("Instrument/GetMyGasMeters");
+        if (response is not null && response.Success)
+        {
+            if (response.Value is not null && response.Value.Any())
+            {
+                bool result = await Modal.ShowNewGasMeterApplicationModalAsync(response.Value);
+                if (result)
+                    await GetGasMeterApplications();
+                IsLoading = false;
+            }
+            else
+                await Modal.ShowMessageModalAsync("Invalid request.", "First, you need to add at least one gas meter.");
+        }
+        else
+            await Modal.ShowMessageModalAsync("Error.", response?.ErrorMessage ?? "Unknown error occured.");
+    }
 
     protected static void SeeApplicationDetail(GasMeterInspectionApplicationModel application)
+    {
+        //TODO open detail dialog
+    }
+
+    protected static void SeeApplicationDetail(ScaleInspectionApplicationModel application)
     {
         //TODO open detail dialog
     }

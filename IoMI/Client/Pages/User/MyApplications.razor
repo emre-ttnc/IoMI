@@ -6,7 +6,10 @@
     <div class="card p-0">
         <div class="card-header d-flex justify-content-between">
             <h5 class="m-0" style="line-height: 1.5em !important;">My Scale Inspection Applications</h5>
-            <button class="btn btn-success py-1" @onclick="() => ApplicationDetail(new ScaleInspectionApplicationModel())">Create Scale Inspection Application</button>
+            <button class="btn btn-success py-1 px-2 d-flex align-items-center" disabled="@IsLoading" @onclick="() => CreateNewScaleInspectionApplication()">
+                <ion-icon name="add-outline" class="me-1 fs-4"></ion-icon>
+                Add
+            </button>
         </div>
         <div class="card-body">
             @if (ScaleApplications is null)
@@ -24,7 +27,7 @@
             }
             else
             {
-                <table class="table table-hover">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
                             <th scope="col">Application Date</th>
@@ -38,11 +41,15 @@
                         @foreach (ScaleInspectionApplicationModel application in ScaleApplications)
                         {
                             <tr>
-                                <td>@application.ApplicationDate</td>
+                                <td>@application.ApplicationDate.Date.ToString("dd.MM.yyyy")</td>
                                 <td>@application.Applicant?.Name @application.Applicant?.Surname</td>
                                 <td>@application.IsAccepted</td>
                                 <td>@application.IsCompleted</td>
-                                <td><button class="btn btn-warning py-0" @onclick="() => ApplicationDetail(application)">See Details</button></td>
+                                <td>
+                                    <button class="btn btn-primary d-flex justify-content-center px-2 py-1 fs-5" @onclick="() => SeeApplicationDetail(application)">
+                                        <ion-icon name="search-outline"></ion-icon>
+                                    </button>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -53,7 +60,10 @@
     <div class="card p-0">
         <div class="card-header d-flex justify-content-between">
             <h5 class="m-0" style="line-height: 1.5em !important;">My Gas Meter Inspection Applications</h5>
-            <button class="btn btn-success py-1">Create Gas Meter Inspection Application</button>
+            <button class="btn btn-success py-1 px-2 d-flex align-items-center" disabled="@IsLoading" @onclick="() => CreateNewGasMeterInspectionApplication()">
+                <ion-icon name="add-outline" class="me-1 fs-4"></ion-icon>
+                Add
+            </button>
         </div>
         <div class="card-body">
             @if (GasMeterApplications is null)
@@ -71,7 +81,7 @@
             }
             else
             {
-                <table class="table table-hover">
+                <table class="table table-hover align-middle">
                     <thead>
                         <tr>
                             <th scope="col">Application Date</th>
@@ -85,11 +95,15 @@
                         @foreach (GasMeterInspectionApplicationModel application in GasMeterApplications)
                         {
                             <tr>
-                                <td>@application.ApplicationDate</td>
+                                <td>@application.ApplicationDate.Date.ToString("dd.MM.yyyy")</td>
                                 <td>@application.Applicant?.Name @application.Applicant?.Surname</td>
                                 <td>@application.IsAccepted</td>
                                 <td>@application.IsCompleted</td>
-                                <td><button class="btn btn-warning py-0" @onclick="() => SeeApplicationDetail(application)">See Details</button></td>
+                                <td>
+                                    <button class="btn btn-primary d-flex justify-content-center px-2 py-1 fs-5" @onclick="() => SeeApplicationDetail(application)">
+                                        <ion-icon name="search-outline"></ion-icon>
+                                    </button>
+                                </td>
                             </tr>
                         }
                     </tbody>

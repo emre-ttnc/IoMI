@@ -1,4 +1,6 @@
 ﻿@inherits BaseModalComponent
+@inject HttpClient Http
+@inject ModalManager Modal
 
 <div class="modal fade show d-block" tabindex="-1" role="dialog">
     <div class="modal-backdrop fade show" @onclick="Canceled"></div>
@@ -41,7 +43,7 @@
                                         <td>@scale.LastInspectionYear</td>
                                         <td>@scale.IsActive</td>
                                         <td>
-                                            <button class="btn btn-success d-flex justify-content-center px-2 py-1" @onclick="() => AddToApplication(scale)">
+                                            <button class="btn btn-success d-flex justify-content-center px-2 py-1 fs-5" @onclick="() => AddToApplication(scale)">
                                                 <ion-icon name="add-circle-outline"></ion-icon>
                                             </button>
                                         </td>
@@ -82,7 +84,7 @@
                                         <td>@scale.LastInspectionYear</td>
                                         <td>@scale.IsActive</td>
                                         <td>
-                                            <button class="btn btn-danger d-flex justify-content-center px-2 py-1" @onclick="() => RemoveFromApplication(scale)">
+                                            <button class="btn btn-danger d-flex justify-content-center px-2 py-1 fs-5" @onclick="() => RemoveFromApplication(scale)">
                                                 <ion-icon name="remove-circle-outline"></ion-icon>
                                             </button>
                                         </td>
@@ -94,7 +96,7 @@
                 </div>
             </div>
             <div class="modal-footer p-1">
-                <ButtonComponent Caption="Add" Color="success" IsBusy="@IsBusy" Icon="checkmark-sharp" />
+                <ButtonComponent Caption="Add" Color="success" IsBusy="@IsBusy" Icon="checkmark-sharp" OnClick="() => CreateAnApplication(Application?.Scales?.ToList())" />
                 <ButtonComponent Caption="Cancel" Color="danger" Icon="close-sharp" OnClick="@Canceled" IsOutline=true />
             </div>
         </div>
@@ -116,6 +118,23 @@
     {
         Scales.Add(selectedScale);
         Application.Scales.Remove(selectedScale);
+    }
+
+    private async Task CreateAnApplication(List<ScaleModel>? scales)
+    {
+        IsBusy = true;
+        if (scales is null || !scales.Any())
+        {
+            await Modal.ShowMessageModalAsync("Invalid request", "Please select at least one scale");
+            IsBusy = false;
+            return;
+        }
+        ServerResponse<bool>? response = await Http.PostAndGetServerResponseAsync<bool, List<ScaleModel>>("Application/CreateScaleInspectionApplication", scales);
+        if (response is not null && response.Success)
+            await Confirmed();
+        else
+            await Modal.ShowMessageModalAsync("Task failed.", response?.ErrorMessage ?? "An unknown error occured.");
+        IsBusy = false;
     }
 
     private async Task Cancel() => await Canceled();

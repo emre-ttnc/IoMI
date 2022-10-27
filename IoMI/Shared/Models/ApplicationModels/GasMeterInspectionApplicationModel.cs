@@ -4,5 +4,5 @@ namespace IoMI.Shared.Models.ApplicationModels;
 
 public class GasMeterInspectionApplicationModel : BaseApplicationModel
 {
-    public ICollection<GasMeterModel> GasMeters { get; set; } = new HashSet<GasMeterModel>();
+    public ICollection<GasMeterModel> GasMeters { get; set; } = new List<GasMeterModel>();
 }

@@ -56,10 +56,17 @@ public class ModalManager
         return result.Confirmed;
     }
 
-    public async Task<bool> ShowScaleApplicationModalAsync(ScaleInspectionApplicationModel application, List<ScaleModel> Scales)
+    public async Task<bool> ShowNewScaleApplicationModalAsync(List<ScaleModel> scales)
     {
-        ModalParameters mParams = new() { { "Application", application } , { "Scales", Scales } };
-        ModalResult result = await _modalService.Show<ScaleApplicationModalComponent>(title: "", parameters: mParams, options: options).Result;
+        ModalParameters mParams = new() { { "Scales", scales } };
+        ModalResult result = await _modalService.Show<NewScaleApplicationModalComponent>(title: "", parameters: mParams, options: options).Result;
+        return result.Confirmed;
+    }
+
+    public async Task<bool> ShowNewGasMeterApplicationModalAsync(List<GasMeterModel> gasMeters)
+    {
+        ModalParameters mParams = new() { { "GasMeters", gasMeters } };
+        ModalResult result = await _modalService.Show<NewGasMeterApplicationModalComponent>(title: "", parameters: mParams, options: options).Result;
         return result.Confirmed;
     }
 

@@ -1,0 +1,141 @@
+﻿@inherits BaseModalComponent
+@inject HttpClient Http
+@inject ModalManager Modal
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-backdrop fade show" @onclick="Canceled"></div>
+    <div class="modal-dialog modal-xl" style="z-index: 1050">
+        <div class="modal-content">
+            <div class="modal-header p-2 bg-light">
+                <h5 class="modal-title d-flex align-items-center"> <ion-icon class="fs-2 me-2" name="download-outline"></ion-icon> Create a Gas Meter Inspection Application </h5>
+                <button type="button" class="btn-close me-0" aria-label="Close" @onclick="Cancel">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card mb-3">
+                    <div class="card-header">Your Gas Meters</div>
+                    @if (GasMeters is null || GasMeters.Count < 1)
+                    {
+                        <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                            <div class="fs-5"> Gas meter list is empty </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <table class="table table-hover table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Type or Model</th>
+                                    <th scope="col">Serial Number</th>
+                                    <th scope="col">Last Inspection Year</th>
+                                    <th scope="col">Is Active</th>
+                                    <th scope="col">#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (GasMeterModel gasMeter in GasMeters)
+                                {
+                                    <tr>
+                                        <td>@gasMeter.Brand</td>
+                                        <td>@gasMeter.TypeOrModel</td>
+                                        <td>@gasMeter.SerialNumber</td>
+                                        <td>@gasMeter.LastInspectionYear</td>
+                                        <td>@gasMeter.IsActive</td>
+                                        <td>
+                                            <button class="btn btn-success d-flex justify-content-center px-2 py-1 fs-5" @onclick="() => AddToApplication(gasMeter)">
+                                                <ion-icon name="add-circle-outline"></ion-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">Selected Gas Meters</div>
+                    @if (Application?.GasMeters is null || Application?.GasMeters.Count < 1)
+                    {
+                        <div class="d-flex flex-column align-items-center justify-content-center gap-2">
+                            <div class="fs-5">There is no selected gas meter</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <table class="table table-hover table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Brand</th>
+                                    <th scope="col">Type or Model</th>
+                                    <th scope="col">Serial Number</th>
+                                    <th scope="col">Last Inspection Year</th>
+                                    <th scope="col">Is Active</th>
+                                    <th scope="col">#</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (GasMeterModel gasMeter in Application.GasMeters)
+                                {
+                                    <tr>
+                                        <td>@gasMeter.Brand</td>
+                                        <td>@gasMeter.TypeOrModel</td>
+                                        <td>@gasMeter.SerialNumber</td>
+                                        <td>@gasMeter.LastInspectionYear</td>
+                                        <td>@gasMeter.IsActive</td>
+                                        <td>
+                                            <button class="btn btn-danger d-flex justify-content-center px-2 py-1 fs-5" @onclick="() => RemoveFromApplication(gasMeter)">
+                                                <ion-icon name="remove-circle-outline"></ion-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+            <div class="modal-footer p-1">
+                <ButtonComponent Caption="Add" Color="success" IsBusy="@IsBusy" Icon="checkmark-sharp" OnClick="() => CreateAnApplication(Application?.GasMeters?.ToList())" />
+                <ButtonComponent Caption="Cancel" Color="danger" Icon="close-sharp" OnClick="@Canceled" IsOutline=true />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public GasMeterInspectionApplicationModel Application { get; set; } = new();
+    [Parameter] public List<GasMeterModel> GasMeters { get; set; } = new();
+    private bool IsBusy { get; set; }
+
+    private void AddToApplication(GasMeterModel selectedGasMeter)
+    {
+        Application.GasMeters.Add(selectedGasMeter);
+        GasMeters.Remove(selectedGasMeter);
+    }
+
+    private void RemoveFromApplication(GasMeterModel selectedGasMeter)
+    {
+        GasMeters.Add(selectedGasMeter);
+        Application.GasMeters.Remove(selectedGasMeter);
+    }
+
+    private async Task CreateAnApplication(List<GasMeterModel>? gasMeters)
+    {
+        IsBusy = true;
+        if (gasMeters is null || !gasMeters.Any())
+        {
+            await Modal.ShowMessageModalAsync("Invalid request", "Please select at least one gas meter");
+            IsBusy = false;
+            return;
+        }
+        ServerResponse<bool>? response = await Http.PostAndGetServerResponseAsync<bool, List<GasMeterModel>>("Application/CreateGasMeterInspectionApplication", gasMeters);
+        if (response is not null && response.Success)
+            await Confirmed();
+        else
+            await Modal.ShowMessageModalAsync("Task failed.", response?.ErrorMessage ?? "An unknown error occured.");
+        IsBusy = false;
+    }
+
+    private async Task Cancel() => await Canceled();
+}

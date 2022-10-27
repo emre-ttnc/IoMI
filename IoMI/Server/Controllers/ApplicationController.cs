@@ -1,5 +1,6 @@
 ﻿using IoMI.Application.Services;
 using IoMI.Shared.Models.ApplicationModels;
+using IoMI.Shared.Models.InstrumentModels;
 using IoMI.Shared.Models.ServerResponseModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -24,4 +25,22 @@ public class ApplicationController : ControllerBase
 
     [HttpGet("GetGasMeterInspectionApplications")]
     public async Task<ServerResponse<List<GasMeterInspectionApplicationModel>>> GetGasMeterInspectionApplications() => await _applicationService.GetGasMeterInspectionApplications();
+
+    [HttpPost("CreateScaleInspectionApplication")]
+    public async Task<ServerResponse<bool>> CreateScaleInspectionApplication(List<ScaleModel> request)
+    {
+        if (request is null || !request.Any())
+            return _applicationService.FailedResponse();
+
+        return await _applicationService.AddNewScaleInspectionApplication(request);
+    }
+
+    [HttpPost("CreateGasMeterInspectionApplication")]
+    public async Task<ServerResponse<bool>> CreateGasMeterInspectionApplication(List<GasMeterModel> request)
+    {
+        if (request is null || !request.Any())
+            return _applicationService.FailedResponse();
+
+        return await _applicationService.AddNewGasMeterInspectionApplication(request);
+    }
 }

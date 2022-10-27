@@ -1,7 +1,10 @@
 ﻿using IoMI.Application.Repositories.ApplicationRepositories;
+using IoMI.Application.Repositories.InstrumentRepositories;
 using IoMI.Application.Services;
+using IoMI.Domain.Entities.InstrumentEntities;
 using IoMI.Domain.Entities.UserEntities;
 using IoMI.Shared.Models.ApplicationModels;
+using IoMI.Shared.Models.InstrumentModels;
 using IoMI.Shared.Models.ServerResponseModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,13 +18,21 @@ public class ApplicationService : IApplicationService
     private readonly UserManager<AppUser> _userManager;
     private readonly IScaleInspectionApplicationReadRepository _scaleInspectionApplicationReadRepository;
     private readonly IGasMeterInspectionApplicationReadRepository _gasMeterInspectionApplicationReadRepository;
+    private readonly IScaleInspectionApplicationWriteRepository _scaleInspectionApplicationWriteRepository;
+    private readonly IGasMeterInspectionApplicationWriteRepository _gasMeterInspectionApplicationWriteRepository;
+    private readonly IScaleReadRepository _scaleReadRepository;
+    private readonly IGasMeterReadRepository _gasMeterReadRepository;
 
-    public ApplicationService(IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager, IScaleInspectionApplicationReadRepository scaleInspectionApplicationReadRepository, IGasMeterInspectionApplicationReadRepository gasMeterInspectionApplicationReadRepository)
+    public ApplicationService(IHttpContextAccessor httpContextAccessor, UserManager<AppUser> userManager, IScaleInspectionApplicationReadRepository scaleInspectionApplicationReadRepository, IGasMeterInspectionApplicationReadRepository gasMeterInspectionApplicationReadRepository, IScaleInspectionApplicationWriteRepository scaleInspectionApplicationWriteRepository, IScaleReadRepository scaleReadRepository, IGasMeterReadRepository gasMeterReadRepository, IGasMeterInspectionApplicationWriteRepository gasMeterInspectionApplicationWriteRepository)
     {
         _httpContextAccessor = httpContextAccessor;
         _userManager = userManager;
         _scaleInspectionApplicationReadRepository = scaleInspectionApplicationReadRepository;
         _gasMeterInspectionApplicationReadRepository = gasMeterInspectionApplicationReadRepository;
+        _scaleInspectionApplicationWriteRepository = scaleInspectionApplicationWriteRepository;
+        _scaleReadRepository = scaleReadRepository;
+        _gasMeterReadRepository = gasMeterReadRepository;
+        _gasMeterInspectionApplicationWriteRepository = gasMeterInspectionApplicationWriteRepository;
     }
 
     private async Task<AppUser?> GetAuthUser()
@@ -47,7 +58,8 @@ public class ApplicationService : IApplicationService
             .Select(app => new ScaleInspectionApplicationModel()
             {
                 Id = app.Id,
-                ApplicationDate = app.ApplicationDate,
+                Applicant = new() { Name = user.Name, Surname = user.Surname },
+                ApplicationDate = DateTime.Parse(app.ApplicationDate.ToString()),
                 IsAccepted = app.IsAccepted,
                 IsCompleted = app.IsCompleted
             }).ToListAsync();
@@ -55,11 +67,37 @@ public class ApplicationService : IApplicationService
         return new() { Success = true, Value = scaleInspectionApplications };
     }
 
-    public Task<ServerResponse<bool>> AddNewScaleInspectionApplication()
+    public async Task<ServerResponse<bool>> AddNewScaleInspectionApplication(List<ScaleModel> scales)
     {
-        throw new NotImplementedException();
-    }
+        AppUser? user = await GetAuthUser();
+        if (user is null)
+            return FailedResponse("Unauthorized request.");
 
+        List<Scale> scaleList = new();
+        foreach (var s in scales)
+        {
+            Scale? scale = await _scaleReadRepository.GetByIdAsync(s.Id);
+            if (scale is not null)
+                scaleList.Add(scale);
+        }
+
+        if (!scaleList.Any())
+            return FailedResponse();
+
+        bool result = await _scaleInspectionApplicationWriteRepository.AddAsync(new()
+        {
+            Id = Guid.NewGuid(),
+            Applicant = user,
+            Scales = scaleList,
+            ApplicationDate = DateOnly.FromDateTime(DateTime.UtcNow),
+            IsAccepted = false,
+            IsCompleted = false
+        });
+
+        await _scaleInspectionApplicationWriteRepository.SaveAsync();
+
+        return new() { Success = result, Value = result };
+    }
     public Task<ServerResponse<bool>> AcceptScaleInspectionApplication()
     {
         throw new NotImplementedException();
@@ -79,16 +117,44 @@ public class ApplicationService : IApplicationService
             .Select(app => new GasMeterInspectionApplicationModel()
             {
                 Id = app.Id,
-                ApplicationDate = app.ApplicationDate,
+                Applicant = new() { Name = user.Name, Surname = user.Surname},
+                ApplicationDate = DateTime.Parse(app.ApplicationDate.ToString()),
                 IsAccepted = app.IsAccepted,
                 IsCompleted = app.IsCompleted
             }).ToListAsync();
         return new() { Success = true, Value = gasMeterInspectionApplications };
     }
 
-    public Task<ServerResponse<bool>> AddNewGasMeterInspectionApplication()
+    public async Task<ServerResponse<bool>> AddNewGasMeterInspectionApplication(List<GasMeterModel> gasMeters)
     {
-        throw new NotImplementedException();
+        AppUser? user = await GetAuthUser();
+        if (user is null)
+            return FailedResponse("Unauthorized request.");
+
+        List<GasMeter> gasMeterList = new();
+        foreach (var g in gasMeters)
+        {
+            GasMeter? gasMeter = await _gasMeterReadRepository.GetByIdAsync(g.Id);
+            if (gasMeter is not null)
+                gasMeterList.Add(gasMeter);
+        }
+
+        if (!gasMeterList.Any())
+            return FailedResponse();
+
+        bool result = await _gasMeterInspectionApplicationWriteRepository.AddAsync(new()
+        {
+            Id = Guid.NewGuid(),
+            Applicant = user,
+            GasMeters = gasMeterList,
+            ApplicationDate = DateOnly.FromDateTime(DateTime.UtcNow),
+            IsAccepted = false,
+            IsCompleted = false
+        });
+
+        await _gasMeterInspectionApplicationWriteRepository.SaveAsync();
+
+        return new() { Success = result, Value = result };
     }
 
     public Task<ServerResponse<bool>> AcceptGasMeterInspectionApplication()
@@ -100,4 +166,8 @@ public class ApplicationService : IApplicationService
     {
         throw new NotImplementedException();
     }
+
+    public ServerResponse<bool> FailedResponse(string error = "Bad request.") =>
+        new() { ErrorMessage = error, Success = false, Value = false };
+
 }

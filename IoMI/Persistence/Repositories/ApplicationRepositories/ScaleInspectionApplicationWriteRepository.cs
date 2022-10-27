@@ -1,8 +1,7 @@
 ﻿using IoMI.Application.Repositories.ApplicationRepositories;
 using IoMI.Domain.Entities.ApplicationEntities;
-using IoMI.Persistence.Repositories;
 
-namespace IoMI.Persistence.Services;
+namespace IoMI.Persistence.Repositories.ApplicationRepositories;
 
 public class ScaleInspectionApplicationWriteRepository : WriteRepository<ScaleInspectionApplication>, IScaleInspectionApplicationWriteRepository
 {
