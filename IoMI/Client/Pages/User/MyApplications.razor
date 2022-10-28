@@ -46,7 +46,7 @@
                                 <td>@application.IsAccepted</td>
                                 <td>@application.IsCompleted</td>
                                 <td>
-                                    <button class="btn btn-primary d-flex justify-content-center px-2 py-1 fs-5" @onclick="() => SeeApplicationDetail(application)">
+                                    <button class="btn btn-primary d-flex justify-content-center px-2 py-1 fs-5" disabled="@IsLoading" @onclick="() => SeeApplicationDetail(application)">
                                         <ion-icon name="search-outline"></ion-icon>
                                     </button>
                                 </td>
@@ -100,7 +100,7 @@
                                 <td>@application.IsAccepted</td>
                                 <td>@application.IsCompleted</td>
                                 <td>
-                                    <button class="btn btn-primary d-flex justify-content-center px-2 py-1 fs-5" @onclick="() => SeeApplicationDetail(application)">
+                                    <button class="btn btn-primary d-flex justify-content-center px-2 py-1 fs-5" disabled="@IsLoading" @onclick="() => SeeApplicationDetail(application)">
                                         <ion-icon name="search-outline"></ion-icon>
                                     </button>
                                 </td>

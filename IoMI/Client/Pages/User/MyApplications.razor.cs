@@ -55,7 +55,7 @@ public class MyApplicationsCode : ComponentBase
         else
             await Modal.ShowMessageModalAsync("Error.", response?.ErrorMessage ?? "Unknown error occured.");
     }
-    
+
 
     protected async Task CreateNewGasMeterInspectionApplication()
     {
@@ -77,13 +77,31 @@ public class MyApplicationsCode : ComponentBase
             await Modal.ShowMessageModalAsync("Error.", response?.ErrorMessage ?? "Unknown error occured.");
     }
 
-    protected static void SeeApplicationDetail(GasMeterInspectionApplicationModel application)
+    protected async Task SeeApplicationDetail(GasMeterInspectionApplicationModel application)
     {
-        //TODO open detail dialog
+        IsLoading = true;
+        ServerResponse<List<GasMeterModel>>? response = await Http.PostAndGetServerResponseAsync<List<GasMeterModel>, string>("Application/GetGasMeterInspectionApplicationDetails", application.Id.ToString());
+        if (response is not null && response.Success)
+        {
+            if (response.Value is not null && response.Value.Any())
+                await Modal.ShowApplicationDetailAsync(application, response.Value);
+        }
+        else
+            await Modal.ShowMessageModalAsync("Error", response?.ErrorMessage ?? "Unknown error occured.");
+        IsLoading = false;
     }
 
-    protected static void SeeApplicationDetail(ScaleInspectionApplicationModel application)
+    protected async Task SeeApplicationDetail(ScaleInspectionApplicationModel application)
     {
-        //TODO open detail dialog
+        IsLoading = true;
+        ServerResponse<List<ScaleModel>>? response = await Http.PostAndGetServerResponseAsync<List<ScaleModel>, string>("Application/GetScaleInspectionApplicationDetails", application.Id.ToString());
+        if (response is not null && response.Success)
+        {
+            if (response.Value is not null && response.Value.Any())
+                await Modal.ShowApplicationDetailAsync(application, response.Value);
+        }
+        else
+            await Modal.ShowMessageModalAsync("Error", response?.ErrorMessage ?? "Unknown error occured.");
+        IsLoading = false;
     }
 }
