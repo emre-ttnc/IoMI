@@ -1,0 +1,57 @@
+﻿@inherits LayoutComponentBase
+@inject CustomAuthStateProvider AppStateProvider
+
+<AuthorizeView Roles="Inspector, SystemAdmin">
+    <Authorized>
+        <div class="container-fluid h-100 d-flex flex-column">
+            <div class="row justify-content-between border-bottom p-2 bg-light">
+                <h3 class="m-0">
+                    IoMI - Inspector Panel
+                </h3>
+            </div>
+            <div class="row flex-fill">
+                <div class="col-md-5 col-lg-4 col-xl-3 col-xxl-2 border-end p-3">
+                    <ul class="nav flex-column nav-pills gap-2">
+                        <li class="nav-item">
+                            <NavLink class="dropdown-item d-flex py-2 rounded" href="/inspectorpanel" Match="NavLinkMatch.All">
+                                <ion-icon class="me-4 fs-4" name="stats-chart-outline"></ion-icon> Home Page
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="dropdown-item d-flex py-2 rounded" href="/inspectorpanel/pendingapplications" Match="NavLinkMatch.All">
+                                <ion-icon class="me-4 fs-4" name="document-attach-outline"></ion-icon> Pending Applications
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="dropdown-item d-flex py-2 rounded" href="/inspectorpanel/acceptedapplications" Match="NavLinkMatch.All">
+                                <ion-icon class="me-4 fs-4" name="document-text-outline"></ion-icon> Accepted Applications
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="dropdown-item d-flex py-2 rounded" href="/inspectorpanel/completedapplications" Match="NavLinkMatch.All">
+                                <ion-icon class="me-4 fs-4" name="file-tray-full-outline"></ion-icon> Completed Applications
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="dropdown-item d-flex py-2 rounded" href="/inspectorpanel/settings" Match="NavLinkMatch.All">
+                                <ion-icon class="me-4 fs-4" name="cog-outline"></ion-icon> Settings
+                            </NavLink>
+                        </li>
+                        <li>
+                            <a class="dropdown-item d-flex py-2 rounded" style="cursor:pointer" @onclick="@(() => AppStateProvider.SetTokenAsync(string.Empty))">
+                                <ion-icon class="me-4 fs-4" name="log-out-outline"></ion-icon>
+                                Log out
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-7 col-lg-8 col-xl-9 col-xxl-10 p-3">
+                    @Body
+                </div>
+            </div>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <Login />
+    </NotAuthorized>
+</AuthorizeView>

@@ -17,6 +17,10 @@
                         Welcome, @context.User.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.UserData)?.Value
                     </p>
                     <AdminNavbar />
+                    <NavLink class="d-flex align-items-center dropdown-item py-2" href="/roles" Match="NavLinkMatch.All">
+                        <ion-icon class="me-2 fs-4" name="albums-outline"></ion-icon>
+                        Choose a Role
+                    </NavLink>
                     <NavLink class="d-flex align-items-center dropdown-item py-2" href="/adminpanel/settings" Match="NavLinkMatch.All">
                         <ion-icon class="me-2 fs-4" name="cog-outline"></ion-icon>
                         Settings
